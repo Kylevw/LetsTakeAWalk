@@ -135,16 +135,16 @@ public class FEImageManager extends ImageManager implements ImageProviderIntf{
         imageListMap.put(PLAYER_WALK_LEFT_LIST, PLAYER_WALK_LEFT);
         imageListMap.put(PLAYER_WALK_RIGHT_LIST, PLAYER_WALK_RIGHT);
         
-        imageMap.put(MISSING_TEXTURE, ResourceTools.loadImageFromResource("fanticideempire/resources/images/utility/missing_texture.png"));
+        imageMap.put(MISSING_TEXTURE, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/utility/missing_texture.png"));
         
-        imageMap.put(TEST_BACKGROUND, ResourceTools.loadImageFromResource("fanticideempire/resources/images/utility/beetlegrassedit.png"));
+        imageMap.put(TEST_BACKGROUND, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/utility/beetlegrassedit.png"));
         
-        imageMap.put(GRASS_TILE, ResourceTools.loadImageFromResource("fanticideempire/resources/images/utility/grass_tile.png"));
+        imageMap.put(GRASS_TILE, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/utility/grass_tile.png"));
         
-        BufferedImage entityShadows = (BufferedImage) ResourceTools.loadImageFromResource("fanticideempire/resources/images/utility/shadow.png");
+        BufferedImage entityShadows = (BufferedImage) ResourceTools.loadImageFromResource("letstakeawalk/resources/images/utility/shadow.png");
         
-        BufferedImage playerSprites = (BufferedImage) ResourceTools.loadImageFromResource("fanticideempire/resources/images/player/player_spritesheet.png");
-        BufferedImage timmySprites = (BufferedImage) ResourceTools.loadImageFromResource("fanticideempire/resources/images/timmy/timmy_spritesheet.png");
+        BufferedImage playerSprites = (BufferedImage) ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/player_spritesheet.png");
+        BufferedImage timmySprites = (BufferedImage) ResourceTools.loadImageFromResource("letstakeawalk/resources/images/timmy/timmy_spritesheet.png");
         
         imageMap.put(ENTITY_SHADOW_BIG, entityShadows.getSubimage(0, 0, 16, 8));
         imageMap.put(ENTITY_SHADOW_MEDIUM, entityShadows.getSubimage(0, 8, 16, 8));
