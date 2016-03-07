@@ -7,7 +7,7 @@ package letstakeawalk.java.environment.entities;
 
 import environment.Actor;
 import environment.Velocity;
-import letstakeawalk.java.universal.resources.FEImageManager;
+import letstakeawalk.java.universal.resources.LTAWImageManager;
 import letstakeawalk.java.universal.resources.ImageProviderIntf;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -54,10 +54,10 @@ public class Entity extends Actor{
     @Override
     public void draw(Graphics2D graphics) {
         BufferedImage shadow = null;
-        if (zDisplacement <= size.height / 3) shadow = ip.getImage(FEImageManager.ENTITY_SHADOW_BIG);
-        else if (zDisplacement <= size.height * 2 / 3) shadow = ip.getImage(FEImageManager.ENTITY_SHADOW_MEDIUM);
-        else if (zDisplacement <= size.height) shadow = ip.getImage(FEImageManager.ENTITY_SHADOW_SMALL);
-        else if (zDisplacement <= size.height * 1.5) shadow = ip.getImage(FEImageManager.ENTITY_SHADOW_TINY);
+        if (zDisplacement <= size.height / 3) shadow = ip.getImage(LTAWImageManager.ENTITY_SHADOW_BIG);
+        else if (zDisplacement <= size.height * 2 / 3) shadow = ip.getImage(LTAWImageManager.ENTITY_SHADOW_MEDIUM);
+        else if (zDisplacement <= size.height) shadow = ip.getImage(LTAWImageManager.ENTITY_SHADOW_SMALL);
+        else if (zDisplacement <= size.height * 1.5) shadow = ip.getImage(LTAWImageManager.ENTITY_SHADOW_TINY);
         
         if (shadow != null) graphics.drawImage(shadow, getObjectGroundBoundary().x, getObjectGroundBoundary().y, getObjectGroundBoundary().width, getObjectGroundBoundary().height, null);
         graphics.drawImage(getImage(), getPosition().x - (size.width / 2), getPosition().y - (size.height) - zDisplacement, size.width, size.height, null);
