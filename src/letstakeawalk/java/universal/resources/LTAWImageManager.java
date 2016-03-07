@@ -16,11 +16,9 @@ import java.util.HashMap;
  *
  * @author Kyle van Wiltenburg
  */
-public class FEImageManager extends ImageManager implements ImageProviderIntf{
+public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
     
     private static final String MISSING_TEXTURE = "MISSING_TEXTURE";
-    
-    public static final String TEST_BACKGROUND = "TEST_BACKGROUND";
     
     public static final String GRASS_TILE = "GRASS_TILE";
     
@@ -136,8 +134,6 @@ public class FEImageManager extends ImageManager implements ImageProviderIntf{
         imageListMap.put(PLAYER_WALK_RIGHT_LIST, PLAYER_WALK_RIGHT);
         
         imageMap.put(MISSING_TEXTURE, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/utility/missing_texture.png"));
-        
-        imageMap.put(TEST_BACKGROUND, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/utility/beetlegrassedit.png"));
         
         imageMap.put(GRASS_TILE, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/utility/grass_tile.png"));
         

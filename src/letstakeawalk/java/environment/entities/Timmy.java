@@ -6,7 +6,7 @@
 package letstakeawalk.java.environment.entities;
 
 import letstakeawalk.java.environment.Direction;
-import letstakeawalk.java.universal.resources.FEImageManager;
+import letstakeawalk.java.universal.resources.LTAWImageManager;
 import letstakeawalk.java.universal.resources.ImageProviderIntf;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -37,16 +37,16 @@ public class Timmy extends Entity{
     private static final int FLOAT_DISPLACEMENT = 4;
     
     public Timmy(Point position, ImageProviderIntf ip) {
-        super(ip.getImage(FEImageManager.TIMMY_DOWN), position, new Dimension(28, 56), ip);
+        super(ip.getImage(LTAWImageManager.TIMMY_DOWN), position, new Dimension(28, 56), ip);
         direction = Direction.DOWN;
-        setImage(ip.getImage(FEImageManager.TIMMY_DOWN));
+        setImage(ip.getImage(LTAWImageManager.TIMMY_DOWN));
     }
     
     public Timmy(Point startPosition, Point endPosition, ImageProviderIntf ip) {
-        super(ip.getImage(FEImageManager.TIMMY_DOWN), startPosition, new Dimension(28, 56), ip);
+        super(ip.getImage(LTAWImageManager.TIMMY_DOWN), startPosition, new Dimension(28, 56), ip);
         direction = Direction.DOWN;
         this.destinationPos = endPosition;
-        setImage(ip.getImage(FEImageManager.TIMMY_DOWN));
+        setImage(ip.getImage(LTAWImageManager.TIMMY_DOWN));
     }
     
     @Override
@@ -88,28 +88,28 @@ public class Timmy extends Entity{
         
         switch (direction) {
             
-            case UP: setImage(FEImageManager.TIMMY_UP);
+            case UP: setImage(LTAWImageManager.TIMMY_UP);
                 break;
             
-            case UP_LEFT: setImage(FEImageManager.TIMMY_UP_LEFT);
+            case UP_LEFT: setImage(LTAWImageManager.TIMMY_UP_LEFT);
                 break;
             
-            case LEFT: setImage(FEImageManager.TIMMY_LEFT);
+            case LEFT: setImage(LTAWImageManager.TIMMY_LEFT);
                 break;
                 
-            case DOWN_LEFT: setImage(FEImageManager.TIMMY_DOWN_LEFT);
+            case DOWN_LEFT: setImage(LTAWImageManager.TIMMY_DOWN_LEFT);
                 break;
             
-            case DOWN: setImage(FEImageManager.TIMMY_DOWN);
+            case DOWN: setImage(LTAWImageManager.TIMMY_DOWN);
                 break;
             
-            case DOWN_RIGHT: setImage(FEImageManager.TIMMY_DOWN_RIGHT);
+            case DOWN_RIGHT: setImage(LTAWImageManager.TIMMY_DOWN_RIGHT);
                 break;
             
-            case RIGHT: setImage(FEImageManager.TIMMY_RIGHT);
+            case RIGHT: setImage(LTAWImageManager.TIMMY_RIGHT);
                 break;
                 
-            case UP_RIGHT: setImage(FEImageManager.TIMMY_UP_RIGHT);
+            case UP_RIGHT: setImage(LTAWImageManager.TIMMY_UP_RIGHT);
                 break;
         }
         

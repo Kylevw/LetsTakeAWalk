@@ -7,7 +7,7 @@ package letstakeawalk.java.universal.main;
 
 import letstakeawalk.java.environment.Direction;
 import letstakeawalk.java.universal.resources.GameState;
-import letstakeawalk.java.universal.resources.FEImageManager;
+import letstakeawalk.java.universal.resources.LTAWImageManager;
 import letstakeawalk.java.environment.entities.Player;
 import letstakeawalk.java.environment.entities.Timmy;
 import letstakeawalk.java.environment.entities.Entity;
@@ -47,14 +47,14 @@ class Environment extends environment.Environment {
     
     public static final int GRID_CELL_SIZE = 24;
     
-    FEImageManager im;
+    LTAWImageManager im;
 
     public Environment() {
         
         environmentTime = 8900;
         
         gameState = GameState.ENVIRONMENT;
-        im = new FEImageManager();
+        im = new LTAWImageManager();
         
         environmentGrid = new Grid
         (DEFAULT_WINDOW_WIDTH / GRID_CELL_SIZE, DEFAULT_WINDOW_HEIGHT / GRID_CELL_SIZE * 2, GRID_CELL_SIZE, GRID_CELL_SIZE, new Point(-DEFAULT_WINDOW_X, -DEFAULT_WINDOW_Y), Color.BLACK);
@@ -188,14 +188,14 @@ class Environment extends environment.Environment {
             
             drawGridBase(graphics);
             
-//            fillGrid(graphics, im.getImage(FEImageManager.GRASS_TILE), xTranslation, yTranslation);
+//            fillGrid(graphics, im.getImage(LTAWImageManager.GRASS_TILE), xTranslation, yTranslation);
             
         }
         
         graphics.setColor(Color.RED);
         graphics.drawOval(-96, -96, 192, 192);
         
-//        graphics.drawImage(im.getImage(FEImageManager.TEST_BACKGROUND), -environmentGrid.getGridSize().width / 2, -environmentGrid.getGridSize().height / 2, environmentGrid.getGridSize().width, environmentGrid.getGridSize().height, null);
+//        graphics.drawImage(im.getImage(LTAWImageManager.TEST_BACKGROUND), -environmentGrid.getGridSize().width / 2, -environmentGrid.getGridSize().height / 2, environmentGrid.getGridSize().width, environmentGrid.getGridSize().height, null);
         
         entities.stream().forEach((entity) -> {
             entity.draw(graphics);
@@ -249,7 +249,7 @@ class Environment extends environment.Environment {
                         gridPoint.y + environmentGrid.getCellHeight() >= -yTranslation + 2 &&
                         gridPoint.y - DEFAULT_WINDOW_HEIGHT <= -yTranslation - 1)
                       
-                        graphics.drawImage(im.getImage(FEImageManager.GRASS_TILE),
+                        graphics.drawImage(im.getImage(LTAWImageManager.GRASS_TILE),
                         gridPoint.x, gridPoint.y,
                         environmentGrid.getCellWidth(),
                         environmentGrid.getCellHeight(), null);

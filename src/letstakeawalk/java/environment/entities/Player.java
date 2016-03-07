@@ -7,7 +7,7 @@ package letstakeawalk.java.environment.entities;
 
 import letstakeawalk.java.environment.ActionStateE;
 import letstakeawalk.java.environment.Direction;
-import letstakeawalk.java.universal.resources.FEImageManager;
+import letstakeawalk.java.universal.resources.LTAWImageManager;
 import letstakeawalk.java.universal.resources.ImageProviderIntf;
 import letstakeawalk.java.environment.ScreenLimitProviderIntf;
 import images.Animator;
@@ -47,21 +47,21 @@ public class Player extends Entity {
      *
      * @param position the current position of the entity on screen
      * @param screenLimiter inputs the minimum and maximum positions for the camera
-     * @param ip the FEImageManager for the entity
+     * @param ip the LTAWImageManager for the entity
      * 
      */
     
     public Player(Point position, ScreenLimitProviderIntf screenLimiter, ImageProviderIntf ip) {
 
-        super(ip.getImage(FEImageManager.PLAYER_IDLE_DOWN_00), position, new Dimension(28, 64), ip);
+        super(ip.getImage(LTAWImageManager.PLAYER_IDLE_DOWN_00), position, new Dimension(28, 64), ip);
         this.directions = new ArrayList<>();
         this.environmentPosition = new Point(position);
         this.displacementPosition = new Point(0, 0);
         this.screenLimiter = screenLimiter;
         screenLimiter.setMaxY(screenLimiter.getMaxY() + (getSize().height / 2));
         
-        FEImageManager im = new FEImageManager();
-        this.animator = new Animator(im, getImageProvider().getImageList(FEImageManager.PLAYER_WALK_DOWN_LIST), ANIMATION_SPEED);
+        LTAWImageManager im = new LTAWImageManager();
+        this.animator = new Animator(im, getImageProvider().getImageList(LTAWImageManager.PLAYER_WALK_DOWN_LIST), ANIMATION_SPEED);
     }
     
     @Override
@@ -110,19 +110,19 @@ public class Player extends Entity {
             case IDLE:
                 switch (facing) {
                     case UP: 
-                        animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_IDLE_UP_LIST));
+                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_IDLE_UP_LIST));
                         animator.setDelayDurationMillis(Integer.MAX_VALUE);
                         break;
                     case DOWN:
-                     animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_IDLE_DOWN_LIST));
+                     animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_IDLE_DOWN_LIST));
                         animator.setDelayDurationMillis(Integer.MAX_VALUE);
                         break;
                         case LEFT:
-                        animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_IDLE_LEFT_LIST));
+                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_IDLE_LEFT_LIST));
                         animator.setDelayDurationMillis(Integer.MAX_VALUE);
                         break;
                     case RIGHT:
-                        animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_IDLE_RIGHT_LIST));
+                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_IDLE_RIGHT_LIST));
                         animator.setDelayDurationMillis(Integer.MAX_VALUE);
                         break;
                 }
@@ -131,19 +131,19 @@ public class Player extends Entity {
             case WALKING:
                 switch (facing) {
                     case UP: 
-                        animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_WALK_UP_LIST));
+                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_WALK_UP_LIST));
                         animator.setDelayDurationMillis(ANIMATION_SPEED);
                         break;
                     case DOWN: 
-                        animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_WALK_DOWN_LIST));
+                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_WALK_DOWN_LIST));
                         animator.setDelayDurationMillis(ANIMATION_SPEED);
                         break;
                     case LEFT: 
-                        animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_WALK_LEFT_LIST));
+                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_WALK_LEFT_LIST));
                         animator.setDelayDurationMillis(ANIMATION_SPEED);
                         break;
                     case RIGHT: 
-                        animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_WALK_RIGHT_LIST));
+                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_WALK_RIGHT_LIST));
                         animator.setDelayDurationMillis(ANIMATION_SPEED);
                         break;
                 }
@@ -152,19 +152,19 @@ public class Player extends Entity {
             case JUMPING:
                 switch (facing) {
                     case UP: 
-                        animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_JUMP_UP_LIST));
+                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_JUMP_UP_LIST));
                         animator.setDelayDurationMillis(Integer.MAX_VALUE);
                         break;
                     case DOWN: 
-                        animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_JUMP_DOWN_LIST));
+                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_JUMP_DOWN_LIST));
                         animator.setDelayDurationMillis(Integer.MAX_VALUE);
                         break;
                     case LEFT: 
-                        animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_JUMP_LEFT_LIST));
+                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_JUMP_LEFT_LIST));
                         animator.setDelayDurationMillis(Integer.MAX_VALUE);
                         break;
                     case RIGHT: 
-                        animator.setImageNames(getImageProvider().getImageList(FEImageManager.PLAYER_JUMP_RIGHT_LIST));
+                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_JUMP_RIGHT_LIST));
                         animator.setDelayDurationMillis(Integer.MAX_VALUE);
                         break;
                 }
