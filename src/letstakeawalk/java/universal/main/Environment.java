@@ -84,10 +84,10 @@ class Environment extends environment.Environment {
         
         if (player != null) {
             player.timerTaskHandler();
-            if (timmy != null) System.out.println(player.intersects(timmy));
+//            if (timmy != null) System.out.println(player.intersects(timmy));
             int testPoint = (int) TrigonometryCalculator.getHypotenuse(player.getPosition().x, player.getPosition().y);
-            if (testPoint < 96) System.out.println("Visible");
-            else System.out.println("Not visible");
+//            if (testPoint < 96) System.out.println("Visible");
+//            else System.out.println("Not visible");
         }
         
         if (timmy != null) {
