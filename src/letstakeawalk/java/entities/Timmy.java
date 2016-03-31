@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package letstakeawalk.java.environment.entities;
+package letstakeawalk.java.entities;
 
-import letstakeawalk.java.environment.Direction;
-import letstakeawalk.java.universal.resources.LTAWImageManager;
-import letstakeawalk.java.universal.resources.ImageProviderIntf;
 import java.awt.Dimension;
+import letstakeawalk.java.main.Direction;
+import letstakeawalk.java.resources.LTAWImageManager;
+import letstakeawalk.java.resources.ImageProviderIntf;
 import java.awt.Point;
 import java.awt.Rectangle;
 import path.TrigonometryCalculator;
