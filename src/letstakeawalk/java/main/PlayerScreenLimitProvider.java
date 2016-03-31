@@ -3,9 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package letstakeawalk.java.universal.main;
-
-import letstakeawalk.java.environment.ScreenLimitProviderIntf;
+package letstakeawalk.java.main;
 
 /**
  *

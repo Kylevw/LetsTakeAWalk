@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package letstakeawalk.java.environment.entities;
+package letstakeawalk.java.entities;
 
-import letstakeawalk.java.environment.ActionStateE;
-import letstakeawalk.java.environment.Direction;
-import letstakeawalk.java.universal.resources.LTAWImageManager;
-import letstakeawalk.java.universal.resources.ImageProviderIntf;
-import letstakeawalk.java.environment.ScreenLimitProviderIntf;
+import letstakeawalk.java.universal.ActionStateE;
+import letstakeawalk.java.main.Direction;
+import letstakeawalk.java.resources.LTAWImageManager;
+import letstakeawalk.java.resources.ImageProviderIntf;
+import letstakeawalk.java.main.ScreenLimitProviderIntf;
 import images.Animator;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -25,7 +25,7 @@ public class Player extends Entity {
     {
         actionState = ActionStateE.IDLE;
         facing = Direction.DOWN;
-        drawObjectBoundary(true);
+//        drawObjectBoundary(false);
     }
     
     private final ScreenLimitProviderIntf screenLimiter;
@@ -55,11 +55,10 @@ public class Player extends Entity {
 
         super(ip.getImage(LTAWImageManager.PLAYER_IDLE_DOWN_00), position, new Dimension(28, 64), ip);
         this.directions = new ArrayList<>();
-        this.environmentPosition = new Point(position);
+        environmentPosition = new Point(position);
         this.displacementPosition = new Point(0, 0);
         this.screenLimiter = screenLimiter;
         screenLimiter.setMaxY(screenLimiter.getMaxY() + (getSize().height / 2));
-        
         LTAWImageManager im = new LTAWImageManager();
         this.animator = new Animator(im, getImageProvider().getImageList(LTAWImageManager.PLAYER_WALK_DOWN_LIST), ANIMATION_SPEED);
     }

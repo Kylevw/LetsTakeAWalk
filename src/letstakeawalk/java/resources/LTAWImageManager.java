@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package letstakeawalk.java.universal.resources;
+package letstakeawalk.java.resources;
 
 import images.ImageManager;
 import images.ResourceTools;

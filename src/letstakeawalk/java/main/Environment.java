@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package letstakeawalk.java.universal.main;
+package letstakeawalk.java.main;
 
-import letstakeawalk.java.environment.Direction;
-import letstakeawalk.java.universal.resources.GameState;
-import letstakeawalk.java.universal.resources.LTAWImageManager;
-import letstakeawalk.java.environment.entities.Player;
-import letstakeawalk.java.environment.entities.Timmy;
-import letstakeawalk.java.environment.entities.Entity;
+import letstakeawalk.java.resources.GameState;
+import letstakeawalk.java.resources.LTAWImageManager;
+import letstakeawalk.java.entities.Player;
+import letstakeawalk.java.entities.Timmy;
+import letstakeawalk.java.entities.Entity;
 import grid.Grid;
 import java.awt.Color;
 import java.awt.Graphics;

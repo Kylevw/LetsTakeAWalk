@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package letstakeawalk.java.environment;
+package letstakeawalk.java.universal;
 
 /**
  *
- * @author Kyle van Wiltenburg
+ * @author Kyle
  */
-public enum Direction {
-    UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
+public enum ActionStateE {
+    WALKING, IDLE, JUMPING
 }

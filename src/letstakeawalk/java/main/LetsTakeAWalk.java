@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package letstakeawalk.java.universal.main;
+package letstakeawalk.java.main;
 
 import environment.ApplicationStarter;
 import java.awt.Dimension;
