@@ -185,10 +185,7 @@ class Environment extends environment.Environment {
         // Draws rectangles for debugging
         if (environmentGrid != null) {
             
-            drawGridBase(graphics);
-            
-//            fillGrid(graphics, im.getImage(LTAWImageManager.GRASS_TILE), xTranslation, yTranslation);
-            
+            drawGridBase(graphics);            
         }
         
         graphics.setColor(Color.RED);
@@ -248,7 +245,7 @@ class Environment extends environment.Environment {
                         gridPoint.y + environmentGrid.getCellHeight() >= -yTranslation + 2 &&
                         gridPoint.y - DEFAULT_WINDOW_HEIGHT <= -yTranslation - 1)
                       
-                        graphics.drawImage(im.getImage(LTAWImageManager.GRASS_TILE),
+                        graphics.drawImage(image,
                         gridPoint.x, gridPoint.y,
                         environmentGrid.getCellWidth(),
                         environmentGrid.getCellHeight(), null);
