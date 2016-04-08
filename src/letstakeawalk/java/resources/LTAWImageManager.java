@@ -20,8 +20,6 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
     
     private static final String MISSING_TEXTURE = "MISSING_TEXTURE";
     
-    public static final String GRASS_TILE = "GRASS_TILE";
-    
     public static final String ENTITY_SHADOW_BIG = "ENTITY_SHADOW_BIG";
     public static final String ENTITY_SHADOW_MEDIUM = "ENTITY_SHADOW_MEDIUM";
     public static final String ENTITY_SHADOW_SMALL = "ENTITY_SHADOW_SMALL";
@@ -66,8 +64,6 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
     public static final String PLAYER_JUMP_LEFT_LIST = "PLAYER_JUMP_LEFT_LIST";
     public static final String PLAYER_JUMP_RIGHT_LIST = "PLAYER_JUMP_RIGHT_LIST";
     
-    private final ImageManager im;
-    
     private final ArrayList<String> PLAYER_IDLE_UP;
     private final ArrayList<String> PLAYER_IDLE_DOWN;
     private final ArrayList<String> PLAYER_IDLE_LEFT;
@@ -83,6 +79,45 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
     private final ArrayList<String> PLAYER_JUMP_LEFT;
     private final ArrayList<String> PLAYER_JUMP_RIGHT;
     
+    
+    
+    
+    
+    
+    
+    public static final String WOMAN_WALK_RIGHT_00 = "WOMAN_WALK_RIGHT_00";
+    public static final String WOMAN_WALK_RIGHT_01 = "WOMAN_WALK_RIGHT_01";
+    public static final String WOMAN_WALK_RIGHT_02 = "WOMAN_WALK_RIGHT_02";
+    
+    public static final String WOMAN_WALK_RIGHT_LIST = "WOMAN_WALK_DOWN_LIST";
+ 
+    private final ArrayList<String> WOMAN_WALK_RIGHT = new ArrayList<>();
+
+    
+    public static final String WOMAN_WALK_LEFT_00 = "WOMAN_WALK_LEFT_00";
+    public static final String WOMAN_WALK_LEFT_01 = "WOMAN_WALK_LEFT_01";
+    public static final String WOMAN_WALK_LEFT_02 = "WOMAN_WALK_LEFT_02";
+
+    public static final String WOMAN_WALK_LEFT_LIST = "WOMAN_WALK_DOWN_LIST";
+
+    private final ArrayList<String> WOMAN_WALK_LEFT = new ArrayList<>();
+
+    
+    
+    public static final String WOMAN_WALK_DOWN_00 = "WOMAN_WALK_DOWN_00";
+    public static final String WOMAN_WALK_DOWN_01 = "WOMAN_WALK_DOWN_01";
+    public static final String WOMAN_WALK_DOWN_02 = "WOMAN_WALK_DOWN_02";
+    
+    public static final String WOMAN_WALK_DOWN_LIST = "WOMAN_WALK_DOWN_LIST";
+    
+    private final ArrayList<String> WOMAN_WALK_DOWN = new ArrayList<>();
+    
+    
+    
+    
+    
+    
+    private final ImageManager im;
     
     private final HashMap<String, Image> imageMap;
     private final HashMap<String, ArrayList> imageListMap;
@@ -135,8 +170,6 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
         
         imageMap.put(MISSING_TEXTURE, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/utility/missing_texture.png"));
         
-        imageMap.put(GRASS_TILE, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/utility/grass_tile.png"));
-        
         BufferedImage entityShadows = (BufferedImage) ResourceTools.loadImageFromResource("letstakeawalk/resources/images/utility/shadow.png");
         
         BufferedImage playerSprites = (BufferedImage) ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/player_spritesheet.png");
@@ -168,6 +201,19 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
         imageMap.put(TIMMY_DOWN_LEFT, timmySprites.getSubimage(28, 56, 28, 56));
         imageMap.put(TIMMY_LEFT, timmySprites.getSubimage(56, 56, 28, 56));
         imageMap.put(TIMMY_UP_LEFT, timmySprites.getSubimage(84, 56, 28, 56));
+        
+        
+        
+        imageMap.put(WOMAN_WALK_DOWN_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-forward-00.jpg"));
+        imageMap.put(WOMAN_WALK_DOWN_01, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01.jpg"));        
+        imageMap.put(WOMAN_WALK_DOWN_02, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-forward-02.jpg"));
+        WOMAN_WALK_DOWN.add(WOMAN_WALK_DOWN_00);
+        WOMAN_WALK_DOWN.add(WOMAN_WALK_DOWN_01);
+        WOMAN_WALK_DOWN.add(WOMAN_WALK_DOWN_02);
+        WOMAN_WALK_DOWN.add(WOMAN_WALK_DOWN_01);
+        imageListMap.put(WOMAN_WALK_DOWN_LIST, WOMAN_WALK_DOWN);
+        
+        
         
     }
     
