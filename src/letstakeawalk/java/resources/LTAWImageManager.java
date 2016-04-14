@@ -79,17 +79,30 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
     private final ArrayList<String> PLAYER_JUMP_LEFT;
     private final ArrayList<String> PLAYER_JUMP_RIGHT;
     
+    public static final String WOMAN_IDLE_UP_00 = "WOMAN_UP";
+    public static final String WOMAN_IDLE_DOWN_00 = "WOMAN_DOWN";
+    public static final String WOMAN_IDLE_LEFT_00 = "WOMAN_LEFT";
+    public static final String WOMAN_IDLE_RIGHT_00 = "WOMAN_RIGHT";
     
     
+    public static final String WOMAN_IDLE_UP_LIST = "WOMAN_IDLE_UP_LIST";
+    public static final String WOMAN_IDLE_DOWN_LIST = "WOMAN_IDLE_DOWN_LIST";
+    public static final String WOMAN_IDLE_LEFT_LIST = "WOMAN_IDLE_LEFT_LIST";
+    public static final String WOMAN_IDLE_RIGHT_LIST = "WOMAN_IDLE_RIGHT_LIST";
     
+    public static final String WOMAN_WALK_UP_00 = "WOMAN_WALK_RIGHT_00";
+    public static final String WOMAN_WALK_UP_01 = "WOMAN_WALK_RIGHT_01";
+    public static final String WOMAN_WALK_UP_02 = "WOMAN_WALK_RIGHT_02";
     
-    
+    public static final String WOMAN_WALK_UP_LIST = "WOMAN_WALK_UP_LIST";
+     
+    private final ArrayList<String> WOMAN_WALK_UP = new ArrayList<>();
     
     public static final String WOMAN_WALK_RIGHT_00 = "WOMAN_WALK_RIGHT_00";
     public static final String WOMAN_WALK_RIGHT_01 = "WOMAN_WALK_RIGHT_01";
     public static final String WOMAN_WALK_RIGHT_02 = "WOMAN_WALK_RIGHT_02";
     
-    public static final String WOMAN_WALK_RIGHT_LIST = "WOMAN_WALK_DOWN_LIST";
+    public static final String WOMAN_WALK_RIGHT_LIST = "WOMAN_WALK_RIGHT_LIST";
  
     private final ArrayList<String> WOMAN_WALK_RIGHT = new ArrayList<>();
 
@@ -112,7 +125,7 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
     
     private final ArrayList<String> WOMAN_WALK_DOWN = new ArrayList<>();
     
-    
+    public static final String ENTITY_SHADOW = "ENTITY_SHADOW";
     
     
     
@@ -212,9 +225,34 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
         WOMAN_WALK_DOWN.add(WOMAN_WALK_DOWN_02);
         WOMAN_WALK_DOWN.add(WOMAN_WALK_DOWN_01);
         imageListMap.put(WOMAN_WALK_DOWN_LIST, WOMAN_WALK_DOWN);
+
         
+        imageMap.put(WOMAN_WALK_UP_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-backwards.jpg"));
+        imageMap.put(WOMAN_WALK_UP_01, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-facing-away.jpg"));        
+        imageMap.put(WOMAN_WALK_UP_02, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-backwards-02.jpg"));
+        WOMAN_WALK_UP.add(WOMAN_WALK_UP_00);
+        WOMAN_WALK_UP.add(WOMAN_WALK_UP_01);
+        WOMAN_WALK_UP.add(WOMAN_WALK_UP_02);
+        WOMAN_WALK_UP.add(WOMAN_WALK_UP_01);
+        imageListMap.put(WOMAN_WALK_UP_LIST, WOMAN_WALK_UP);        
         
+        imageMap.put(WOMAN_WALK_LEFT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-left.jpg"));
+        imageMap.put(WOMAN_WALK_LEFT_01, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-outline-facing-left.jpg"));        
+        imageMap.put(WOMAN_WALK_LEFT_02, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-left-02.jpg"));
+        WOMAN_WALK_LEFT.add(WOMAN_WALK_LEFT_00);
+        WOMAN_WALK_LEFT.add(WOMAN_WALK_LEFT_01);
+        WOMAN_WALK_LEFT.add(WOMAN_WALK_LEFT_02);
+        WOMAN_WALK_LEFT.add(WOMAN_WALK_LEFT_01);
+        imageListMap.put(WOMAN_WALK_LEFT_LIST, WOMAN_WALK_LEFT);  
         
+        imageMap.put(WOMAN_WALK_RIGHT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-right.jpg"));
+        imageMap.put(WOMAN_WALK_RIGHT_01, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-outline-facing-right.jpg"));        
+        imageMap.put(WOMAN_WALK_RIGHT_02, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-right-02.jpg"));
+        WOMAN_WALK_RIGHT.add(WOMAN_WALK_RIGHT_00);
+        WOMAN_WALK_RIGHT.add(WOMAN_WALK_RIGHT_01);
+        WOMAN_WALK_RIGHT.add(WOMAN_WALK_RIGHT_02);
+        WOMAN_WALK_RIGHT.add(WOMAN_WALK_RIGHT_01);
+        imageListMap.put(WOMAN_WALK_RIGHT_LIST, WOMAN_WALK_RIGHT); 
     }
     
     @Override
