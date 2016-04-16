@@ -7,6 +7,7 @@ package letstakeawalk.java.resources;
 
 import images.ImageManager;
 import images.ResourceTools;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -177,6 +178,43 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
         if (image == null) image = (BufferedImage) im.getImage(MISSING_TEXTURE);
         return image;
     }
+    
+    @Override
+    public BufferedImage getTintedImage(BufferedImage image, Color tintColor) {
+        
+        int width = image.getWidth(null);
+        int height = image.getHeight(null);
+        BufferedImage tintedImage = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
+        
+        for (int pixelX = 0; pixelX < image.getWidth(); pixelX++) {
+            for (int pixelY = 0; pixelY < image.getHeight(); pixelY++) {
+                
+                int pixel = image.getRGB(pixelX, pixelY);
+                if((pixel>>24) != 0x00) {        
+                
+                Color color = new Color(image.getRGB(pixelX, pixelY));
+                int red = color.getRed();
+                int green = color.getGreen();
+                int blue = color.getBlue();
+                int redTint = tintColor.getRed();
+                int greenTint = tintColor.getGreen();
+                int blueTint = tintColor.getBlue();
+                
+                int finalRed = red + ((redTint - red) * tintColor.getAlpha() / 255);
+                int finalGreen = green + ((greenTint - green) * tintColor.getAlpha() / 255);
+                int finalBlue = blue + ((blueTint - blue) * tintColor.getAlpha() / 255);
+                
+                Color newColor = new Color(finalRed, finalGreen, finalBlue, color.getAlpha());
+                
+                tintedImage.setRGB(pixelX, pixelY, newColor.getRGB());
+                }
+            }
+        }
+        
+        return tintedImage;
+        
+    }
+    
     
     @Override
     public ArrayList<String> getImageList(String listName){

@@ -5,16 +5,20 @@
  */
 package letstakeawalk.java.entities;
 
+import letstakeawalk.java.resources.AudioPlayerIntf;
 import environment.Actor;
+import environment.Physics;
 import environment.Velocity;
-import letstakeawalk.java.resources.LTAWImageManager;
-import letstakeawalk.java.resources.ImageProviderIntf;
+import images.Animator;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import static letstakeawalk.java.main.EntityManager.explosions;
+import letstakeawalk.java.resources.ImageProviderIntf;
+import letstakeawalk.java.resources.LTAWImageManager;
 
 /**
  *
@@ -23,24 +27,50 @@ import java.awt.image.BufferedImage;
 public class Entity extends Actor{
     
     {
-        zDisplacement = 0;
-        zVelocity = 0;
         drawBoundary = false;
     }
     
     private boolean onGround;
+    private double weight;
+    
+    private boolean explode;
+    private int explosionSize;
+    
+    private boolean despawn;
+    
+    private final Animator animator;
     
     private final Dimension size;
     private boolean drawBoundary;
-    private int zDisplacement;
-    private int zVelocity;
+    private double xKnockback, yKnockback;
+    private boolean applyGravity;
     
     private final ImageProviderIntf ip;
+    private final AudioPlayerIntf ap;
     
-    public Entity(BufferedImage image, Point position, Dimension size, ImageProviderIntf ip) {
+    public Entity(BufferedImage image, Point position, Dimension size, ImageProviderIntf ip, AudioPlayerIntf ap, String imageListName, int animationSpeed) {
         super(image, position, new Velocity(0, 0));
+        this.ap = ap;
         this.size = size;
         this.ip = ip;
+        this.weight = weight;
+        if (this.weight < 0) this.weight = 0;
+        LTAWImageManager im = new LTAWImageManager();
+        this.animator = new Animator(im, ip.getImageList(imageListName), animationSpeed);
+        applyGravity = true;
+    }
+    
+    public void accelerateKnockbackVelocity(int x, int y) {
+        xKnockback += x;
+        yKnockback += y;
+    }
+    
+    public void applyGravity(boolean applyGravity) {
+        this.applyGravity = applyGravity;
+    }
+    
+    public void accelerateKnockbackVelocity(Velocity velocity) {
+        accelerateKnockbackVelocity(velocity.x, velocity.y);
     }
     
     public Dimension getSize() {
@@ -48,22 +78,25 @@ public class Entity extends Actor{
     }
     
     public void timerTaskHandler() {
+        updateImage();
         
+        setPosition(getPosition().x + (int) xKnockback, getPosition().y + (int) yKnockback);
+        if (xKnockback != 0) xKnockback -= weight * xKnockback / Math.abs(xKnockback) / 8;
+        if (yKnockback != 0) yKnockback -= weight * yKnockback / Math.abs(yKnockback) / 8;
+        
+        if (explode) {
+            explosions.add(new Explosion(getPosition(), explosionSize, ap));
+            setDespawn(true);
+        }
     }
     
     @Override
     public void draw(Graphics2D graphics) {
-        BufferedImage shadow = null;
-        if (zDisplacement <= size.height / 3) shadow = ip.getImage(LTAWImageManager.ENTITY_SHADOW_BIG);
-        else if (zDisplacement <= size.height * 2 / 3) shadow = ip.getImage(LTAWImageManager.ENTITY_SHADOW_MEDIUM);
-        else if (zDisplacement <= size.height) shadow = ip.getImage(LTAWImageManager.ENTITY_SHADOW_SMALL);
-        else if (zDisplacement <= size.height * 1.5) shadow = ip.getImage(LTAWImageManager.ENTITY_SHADOW_TINY);
+        graphics.drawImage(ip.getImage(null), getShadowRectangle().x, getShadowRectangle().y, getShadowRectangle().width, getShadowRectangle().height, null);
+                //TODO Replace "null" with entity shadow image
         
-        if (shadow != null) graphics.drawImage(shadow, getObjectGroundBoundary().x, getObjectGroundBoundary().y, getObjectGroundBoundary().width, getObjectGroundBoundary().height, null);
-        graphics.drawImage(getImage(), getPosition().x - (size.width / 2), getPosition().y - (size.height) - zDisplacement, size.width, size.height, null);
+        graphics.drawImage(getImage(), getPosition().x - (size.width / 2), getPosition().y - (size.height), size.width, size.height, null);
         if (drawBoundary) {
-            graphics.setColor(Color.RED);
-            graphics.draw(getObjectGroundBoundary());
             graphics.setColor(Color.BLUE);
             graphics.draw(getObjectBoundary());
         }
@@ -72,72 +105,64 @@ public class Entity extends Actor{
     @Override
     public Rectangle getObjectBoundary() {
         return new Rectangle(getPosition().x - (size.width / 2),
-        getPosition().y - (size.height) - zDisplacement,
+        getPosition().y - size.height,
         size.width, size.height);
-    }
-    
-    public Rectangle getObjectGroundBoundary() {
-        return new Rectangle(getObjectBoundary().x,
-        getObjectBoundary().y + getObjectBoundary().height - (getObjectBoundary().width / 4) + zDisplacement,
-        getObjectBoundary().width, getObjectBoundary().width / 2);
     }
     
     public void drawObjectBoundary(boolean drawBoundary) {
         this.drawBoundary = drawBoundary;
     }
     
-    public int getZDisplacement() {
-        return zDisplacement;
-    }
-    
-    public int getZVelocity() {
-        return zVelocity;
-    }
-    
-    public void setZVelocity(int zVelocity) {
-        this.zVelocity = zVelocity;
-    }
-    
-    public void accelerateZVelocity(int zVelocity) {
-        this.zVelocity += zVelocity;
-    }
-    
-    public void setZDisplacement(int zDisplacement) {
-        this.zDisplacement = zDisplacement;
+    public void explode(int explosionSize) {
+        this.explosionSize = explosionSize;
+        explode = true;
     }
     
     
-    @Override
-    public void move() {
-        applyZVelocity();
-        super.move();
+    public Rectangle getShadowRectangle() {
+        int shadowWidth = getObjectBoundary().width - ((1 + (getObjectBoundary().width / 6)) * 2);
+        if (shadowWidth < 0) shadowWidth = 0;
+        return new Rectangle(getObjectBoundary().x + (1 + (getObjectBoundary().width / 6)), getObjectBoundary().y + (1 + (getObjectBoundary().width / 6)) + (getObjectBoundary().height / 2), shadowWidth, shadowWidth);
     }
     
-    public void applyZVelocity() {
-        zDisplacement += zVelocity;
-        
-        if (zDisplacement <= 0) {
-            zDisplacement = 0;
-            zVelocity = 0;
-        } else accelerateZVelocity(-1);
+    public boolean drawBoundary() {
+        return drawBoundary;
     }
     
     public boolean intersects(Entity entity) {
-        return getObjectBoundary().intersects(entity.getObjectBoundary()) &&
-        getObjectGroundBoundary().intersects(entity.getObjectGroundBoundary());
+        return getObjectBoundary().intersects(entity.getObjectBoundary());
     }
-    
     
     public void setImage(String image) {
         super.setImage(ip.getImage(image));
+    }
+    
+    public Animator getAnimator() {
+        return animator;
     }
     
     public ImageProviderIntf getImageProvider() {
         return ip;
     }
     
-    public boolean onGround() {
-        return zDisplacement == 0;
+    public AudioPlayerIntf getAudioPlayer() {
+        return ap;
+    }
+    
+    public void setDespawn(boolean despawn) {
+        this.despawn = despawn;
+    }
+    
+    public boolean despawn() {
+        return despawn;
+    }
+    
+    private void updateImage() {
+        if (animator != null) setImage(animator.getCurrentImage());
+    }
+    
+    public void setImageList(String listName) {
+        animator.setImageNames(getImageProvider().getImageList(listName));
     }
     
 }
