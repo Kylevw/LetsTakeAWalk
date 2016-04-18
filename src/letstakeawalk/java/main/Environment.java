@@ -20,6 +20,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import letstakeawalk.java.resources.AudioPlayerIntf;
+import map.Map;
+import map.MapVisualizerDefault;
 import path.TrigonometryCalculator;
 
 /**
@@ -38,6 +40,7 @@ class Environment extends environment.Environment {
     
     public GameState gameState;
     
+    
     public static final int DEFAULT_WINDOW_WIDTH = 336;
     public static final int DEFAULT_WINDOW_HEIGHT = 192;
     public static final int DEFAULT_WINDOW_X = DEFAULT_WINDOW_WIDTH / 2;
@@ -48,7 +51,14 @@ class Environment extends environment.Environment {
     LTAWImageManager im;
     AudioPlayerIntf am;
 
+    private Map currentMap;
+    private MapVisualizerDefault mapVisualizer;
+    
+    
     public Environment() {
+        
+        mapVisualizer = new MapVisualizerDefault(true, false);
+        setCurrentMap(MapFactory.getCampusMap());
         
         environmentTime = 8900;
         
@@ -122,6 +132,8 @@ class Environment extends environment.Environment {
     @Override
     public void paintEnvironment(Graphics g) {
         
+        
+        
         ArrayList<Entity> entities = new ArrayList<>();
         if (player != null) entities.add(player);
         
@@ -140,6 +152,11 @@ class Environment extends environment.Environment {
         
         int xTranslation = 0;
         int yTranslation = 0;
+        
+        if (currentMap != null) {
+            currentMap.drawMap(g);
+            
+        }
         
         if (player != null) {
             xTranslation = player.getPosition().x;
@@ -225,6 +242,23 @@ class Environment extends environment.Environment {
                     
                 }
             }
+    }
+
+    /**
+     * @return the currentMap
+     */
+    public Map getCurrentMap() {
+        return currentMap;
+    }
+
+    /**
+     * @param currentMap the currentMap to set
+     */
+    public void setCurrentMap(Map currentMap) {
+        this.currentMap = currentMap;
+        
+        this.currentMap.setMapVisualizer(mapVisualizer);
+        this.currentMap.setPosition(new Point(25, 25));
     }
     
 }
