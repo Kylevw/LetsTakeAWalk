@@ -236,7 +236,7 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
         WOMAN_WALK_UP.add(WOMAN_WALK_UP_01);
         imageListMap.put(WOMAN_WALK_UP_LIST, WOMAN_WALK_UP);        
         
-        imageMap.put(WOMAN_WALK_LEFT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-left.jpg"));
+        imageMap.put(WOMAN_WALK_LEFT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-left-01.jpg"));
         imageMap.put(WOMAN_WALK_LEFT_01, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-outline-facing-left.jpg"));        
         imageMap.put(WOMAN_WALK_LEFT_02, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-left-02.jpg"));
         WOMAN_WALK_LEFT.add(WOMAN_WALK_LEFT_00);
@@ -245,7 +245,7 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
         WOMAN_WALK_LEFT.add(WOMAN_WALK_LEFT_01);
         imageListMap.put(WOMAN_WALK_LEFT_LIST, WOMAN_WALK_LEFT);  
         
-        imageMap.put(WOMAN_WALK_RIGHT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-right.jpg"));
+        imageMap.put(WOMAN_WALK_RIGHT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-walking-right-01.jpg"));
         imageMap.put(WOMAN_WALK_RIGHT_01, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-outline-facing-right.jpg"));        
         imageMap.put(WOMAN_WALK_RIGHT_02, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-right-02.jpg"));
         WOMAN_WALK_RIGHT.add(WOMAN_WALK_RIGHT_00);
