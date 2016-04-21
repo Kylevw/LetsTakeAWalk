@@ -257,6 +257,7 @@ public class Player extends Entity {
                     else if (getVelocity().y > 0) facing = Direction.DOWN;
                 }
                 break;
+                
         }
     }
     
