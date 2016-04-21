@@ -20,15 +20,22 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import letstakeawalk.java.resources.AudioPlayerIntf;
+import map.Item;
+import map.ItemEventHandlerIntf;
 import map.Map;
 import map.MapVisualizerDefault;
+import map.Obstacle;
+import map.ObstacleEventHandlerIntf;
+import map.Portal;
+import map.PortalEventHandlerIntf;
 import path.TrigonometryCalculator;
 
 /**
  *
  * @author Kyle van Wiltenburg
  */
-class Environment extends environment.Environment {
+class Environment extends environment.Environment 
+    implements PortalEventHandlerIntf, ItemEventHandlerIntf, ObstacleEventHandlerIntf {
     
     public Player player;
     
@@ -58,6 +65,8 @@ class Environment extends environment.Environment {
     public Environment() {
         
         mapVisualizer = new MapVisualizerDefault(true, false);
+        mapVisualizer.setObjectColor(Color.RED);
+        
         setCurrentMap(MapFactory.getCampusMap());
         
         environmentTime = 8900;
@@ -112,7 +121,12 @@ class Environment extends environment.Environment {
             else if (e.getKeyCode() == KeyEvent.VK_A && !player.getDirections().contains(Direction.LEFT)) player.addDirection(Direction.LEFT);
             else if (e.getKeyCode() == KeyEvent.VK_D && !player.getDirections().contains(Direction.RIGHT)) player.addDirection(Direction.RIGHT);
         }
-            
+        
+        if (currentMap != null) {
+            if (e.getKeyCode() == KeyEvent.VK_0) {
+                mapVisualizer.toggleShowAllObjects();
+            }
+        }     
     }
 
     @Override
@@ -127,6 +141,12 @@ class Environment extends environment.Environment {
     
     @Override
     public void environmentMouseClicked(MouseEvent e) {
+//        System.out.println("Mouse event " + e.toString());
+        if (currentMap != null) {
+            Point cell = currentMap.getCellLocation(e.getPoint());
+            currentMap.validateLocation(cell);
+        }
+    
     }
     
     @Override
@@ -145,10 +165,10 @@ class Environment extends environment.Environment {
         
         
         // Resizes the default window size to the current size of the JFrame
-        AffineTransform atWindow;
-        Graphics2D graphics = (Graphics2D) g;
-        atWindow = AffineTransform.getScaleInstance((double) LetsTakeAWalk.getWindowSize().width / DEFAULT_WINDOW_WIDTH, (double) LetsTakeAWalk.getWindowSize().height / DEFAULT_WINDOW_HEIGHT);
-        if (atWindow != null) graphics.setTransform(atWindow);
+//        AffineTransform atWindow;
+//        Graphics2D graphics = (Graphics2D) g;
+//        atWindow = AffineTransform.getScaleInstance((double) LetsTakeAWalk.getWindowSize().width / DEFAULT_WINDOW_WIDTH, (double) LetsTakeAWalk.getWindowSize().height / DEFAULT_WINDOW_HEIGHT);
+//        if (atWindow != null) graphics.setTransform(atWindow);
         
         int xTranslation = 0;
         int yTranslation = 0;
@@ -158,47 +178,46 @@ class Environment extends environment.Environment {
             
         }
         
-        if (player != null) {
-            xTranslation = player.getPosition().x;
-            yTranslation = player.getPosition().y - (player.getSize().height / 2);
-            if (xTranslation < player.getScreenMinX()) xTranslation = player.getScreenMinX();
-            else if (xTranslation > player.getScreenMaxX()) xTranslation = player.getScreenMaxX();
-            if (yTranslation < player.getScreenMinY()) yTranslation = player.getScreenMinY();
-            else if (yTranslation > player.getScreenMaxY()) yTranslation = player.getScreenMaxY();
-            xTranslation = DEFAULT_WINDOW_X - xTranslation;
-            yTranslation = DEFAULT_WINDOW_Y - yTranslation;
-        }
+//        if (player != null) {
+//            xTranslation = player.getPosition().x;
+//            yTranslation = player.getPosition().y - (player.getSize().height / 2);
+//            if (xTranslation < player.getScreenMinX()) xTranslation = player.getScreenMinX();
+//            else if (xTranslation > player.getScreenMaxX()) xTranslation = player.getScreenMaxX();
+//            if (yTranslation < player.getScreenMinY()) yTranslation = player.getScreenMinY();
+//            else if (yTranslation > player.getScreenMaxY()) yTranslation = player.getScreenMaxY();
+//            xTranslation = DEFAULT_WINDOW_X - xTranslation;
+//            yTranslation = DEFAULT_WINDOW_Y - yTranslation;
+//        }
         
         // Translates all background images in reference to the player's current position
-        graphics.translate(xTranslation, yTranslation);
+//        graphics.translate(xTranslation, yTranslation);
         
         // Draws rectangles for debugging
-        if (environmentGrid != null) {
-            
-            drawGridBase(graphics);            
-        }
-        
-        graphics.setColor(Color.RED);
-        graphics.drawOval(-96, -96, 192, 192);
+//        if (environmentGrid != null) {
+//            drawGridBase(graphics);            
+//        }
+//        
+//        graphics.setColor(Color.RED);
+//        graphics.drawOval(-96, -96, 192, 192);
         
 //        graphics.drawImage(im.getImage(LTAWImageManager.TEST_BACKGROUND), -environmentGrid.getGridSize().width / 2, -environmentGrid.getGridSize().height / 2, environmentGrid.getGridSize().width, environmentGrid.getGridSize().height, null);
         
-        entities.stream().forEach((entity) -> {
-            entity.draw(graphics);
-        });      
+//        entities.stream().forEach((entity) -> {
+//            entity.draw(graphics);
+//        });      
         
-        int environmentFactor = 0;
-        if (environmentTime >= ENVIRONMENT_DAY_LENGTH * 3 / 8) {
-            if (environmentTime >= ENVIRONMENT_DAY_LENGTH / 2 && environmentTime < ENVIRONMENT_DAY_LENGTH * 7 / 8) environmentFactor = 255;
-            else {
-                environmentFactor = environmentTime - (ENVIRONMENT_DAY_LENGTH * 3 / 8);
-                if (environmentTime > ENVIRONMENT_DAY_LENGTH / 2) environmentFactor = Math.abs(environmentFactor - (ENVIRONMENT_DAY_LENGTH * 5 / 8));
-                environmentFactor = environmentFactor * 255 * 8 / ENVIRONMENT_DAY_LENGTH;
-            }
-        }
+//        int environmentFactor = 0;
+//        if (environmentTime >= ENVIRONMENT_DAY_LENGTH * 3 / 8) {
+//            if (environmentTime >= ENVIRONMENT_DAY_LENGTH / 2 && environmentTime < ENVIRONMENT_DAY_LENGTH * 7 / 8) environmentFactor = 255;
+//            else {
+//                environmentFactor = environmentTime - (ENVIRONMENT_DAY_LENGTH * 3 / 8);
+//                if (environmentTime > ENVIRONMENT_DAY_LENGTH / 2) environmentFactor = Math.abs(environmentFactor - (ENVIRONMENT_DAY_LENGTH * 5 / 8));
+//                environmentFactor = environmentFactor * 255 * 8 / ENVIRONMENT_DAY_LENGTH;
+//            }
+//        }
         
-        graphics.setColor(new Color(255 - environmentFactor, 128 - environmentFactor / 2, environmentFactor / 16, environmentFactor * 13 / 16));
-        if (environmentFactor > 0) graphics.fillRect(-xTranslation, -yTranslation, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+//        graphics.setColor(new Color(255 - environmentFactor, 128 - environmentFactor / 2, environmentFactor / 16, environmentFactor * 13 / 16));
+//        if (environmentFactor > 0) graphics.fillRect(-xTranslation, -yTranslation, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
     }
     
     public void drawGridBase(Graphics2D graphics) {
@@ -259,6 +278,36 @@ class Environment extends environment.Environment {
         
         this.currentMap.setMapVisualizer(mapVisualizer);
         this.currentMap.setPosition(new Point(25, 25));
+        //hook up the listener method
+        this.currentMap.setPortalEventHandler(this);
+        this.currentMap.setItemEventHandler(this);
+        this.currentMap.setObstacleEventHandler(this);   
+        repaint();
     }
+
+//<editor-fold defaultstate="collapsed" desc="PortalEventHandlerIntf">
+    @Override
+    public boolean portalEvent(Portal portal) {
+        System.out.println("PORTAL");
+        setCurrentMap(MapFactory.getMap(portal.getDestinationMapName()));
+        return true;
+    }
+//</editor-fold>
+
+//<editor-fold defaultstate="collapsed" desc="ItemEventHandlerIntf">
+    @Override
+    public boolean itemEvent(Item item) {
+        System.out.println("Item " + item.getType() + " " + item.getLocation());
+        return true;
+    }
+//</editor-fold>
+
+//<editor-fold defaultstate="collapsed" desc="ObstacleEventHandlerIntf">
+    @Override
+    public boolean obstacleEvent(Obstacle obstacle) {
+        System.out.println("Obstacle " + obstacle.getType() + " " + obstacle.getLocation());
+        return false;
+    }
+//</editor-fold>
     
 }
