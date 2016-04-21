@@ -26,8 +26,8 @@ import timer.DurationTimer;
  */
 public class Player extends Entity {
     
-    private static final int PLAYER_WIDTH = 28;
-    private static final int PLAYER_HEIGHT = 64;
+    private static final int PLAYER_WIDTH = 13;
+    private static final int PLAYER_HEIGHT = 30;
     private int health, maxHealth, bombCount;
     
     private final DurationTimer invulTimer;
@@ -145,7 +145,7 @@ public class Player extends Entity {
                         setImageList(LTAWImageManager.PLAYER_IDLE_UP_LIST);
                         break;
                     case DOWN:
-                        setImageList(LTAWImageManager.PLAYER_IDLE_DOWN_LIST);
+                        setImageList(LTAWImageManager.WOMAN_IDLE_DOWN_LIST);
                         break;
                         case LEFT:
                         setImageList(LTAWImageManager.PLAYER_IDLE_LEFT_LIST);
