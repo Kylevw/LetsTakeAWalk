@@ -34,59 +34,59 @@ import path.TrigonometryCalculator;
  *
  * @author Kyle van Wiltenburg
  */
-class Environment extends environment.Environment 
-    implements PortalEventHandlerIntf, ItemEventHandlerIntf, ObstacleEventHandlerIntf {
-    
+class Environment extends environment.Environment
+        implements PortalEventHandlerIntf, ItemEventHandlerIntf, ObstacleEventHandlerIntf {
+
     public Player player;
-    
+
     private int environmentTime;
-    
+
     private static final int ENVIRONMENT_DAY_LENGTH = 24000;
-    
+
     public final Grid environmentGrid;
-    
+
     public GameState gameState;
-    
-    
+
     public static final int DEFAULT_WINDOW_WIDTH = 336;
     public static final int DEFAULT_WINDOW_HEIGHT = 192;
     public static final int DEFAULT_WINDOW_X = DEFAULT_WINDOW_WIDTH / 2;
     public static final int DEFAULT_WINDOW_Y = DEFAULT_WINDOW_HEIGHT / 2;
-    
+
     public static final int GRID_CELL_SIZE = 24;
-    
+
     LTAWImageManager im;
     AudioPlayerIntf am;
 
     private Map currentMap;
     private MapVisualizerDefault mapVisualizer;
-    
-    
+
     public Environment() {
-        
+
         mapVisualizer = new MapVisualizerDefault(true, false);
         mapVisualizer.setObjectColor(Color.RED);
-        
+
         setCurrentMap(MapFactory.getCampusMap());
-        
+
         environmentTime = 8900;
-        
+
         gameState = GameState.ENVIRONMENT;
         im = new LTAWImageManager();
-        
-        environmentGrid = new Grid
-        (DEFAULT_WINDOW_WIDTH / GRID_CELL_SIZE, DEFAULT_WINDOW_HEIGHT / GRID_CELL_SIZE * 2, GRID_CELL_SIZE, GRID_CELL_SIZE, new Point(-DEFAULT_WINDOW_X, -DEFAULT_WINDOW_Y), Color.BLACK);
-        
-        
+
+        environmentGrid = new Grid(DEFAULT_WINDOW_WIDTH / GRID_CELL_SIZE, DEFAULT_WINDOW_HEIGHT / GRID_CELL_SIZE * 2, GRID_CELL_SIZE, GRID_CELL_SIZE, new Point(-DEFAULT_WINDOW_X, -DEFAULT_WINDOW_Y), Color.BLACK);
+
         updateGrid(2, 2);
-        
+
         player = new Player(new Point(0, 0), new PlayerScreenLimitProvider(environmentGrid.getGridSize().width - DEFAULT_WINDOW_WIDTH, environmentGrid.getGridSize().height - DEFAULT_WINDOW_HEIGHT), im, am);
-        
+
     }
-    
+
     private void updateGrid(double xScreens, double yScreens) {
-        if (xScreens < 1) xScreens = 1;
-        if (yScreens < 1) yScreens = 1;
+        if (xScreens < 1) {
+            xScreens = 1;
+        }
+        if (yScreens < 1) {
+            yScreens = 1;
+        }
         int x = (int) (xScreens * DEFAULT_WINDOW_WIDTH);
         int y = (int) (yScreens * DEFAULT_WINDOW_HEIGHT);
         environmentGrid.setPosition(new Point(-(x / 2), -(y / 2)));
@@ -100,45 +100,57 @@ class Environment extends environment.Environment
 
     @Override
     public void timerTaskHandler() {
-        
+
         if (player != null) {
             player.timerTaskHandler();
             int testPoint = (int) TrigonometryCalculator.getHypotenuse(player.getPosition().x, player.getPosition().y);
 //            if (testPoint < 96) System.out.println("Visible");
 //            else System.out.println("Not visible");
         }
-        
+
         environmentTime++;
-        if (environmentTime > ENVIRONMENT_DAY_LENGTH) environmentTime = 0;
-        
+        if (environmentTime > ENVIRONMENT_DAY_LENGTH) {
+            environmentTime = 0;
+        }
+
     }
-    
+
     @Override
     public void keyPressedHandler(KeyEvent e) {
         if (player != null) {
-            if (e.getKeyCode() == KeyEvent.VK_W && !player.getDirections().contains(Direction.UP)) player.addDirection(Direction.UP);
-            else if (e.getKeyCode() == KeyEvent.VK_S && !player.getDirections().contains(Direction.DOWN)) player.addDirection(Direction.DOWN);
-            else if (e.getKeyCode() == KeyEvent.VK_A && !player.getDirections().contains(Direction.LEFT)) player.addDirection(Direction.LEFT);
-            else if (e.getKeyCode() == KeyEvent.VK_D && !player.getDirections().contains(Direction.RIGHT)) player.addDirection(Direction.RIGHT);
+            if (e.getKeyCode() == KeyEvent.VK_W && !player.getDirections().contains(Direction.UP)) {
+                player.addDirection(Direction.UP);
+            } else if (e.getKeyCode() == KeyEvent.VK_S && !player.getDirections().contains(Direction.DOWN)) {
+                player.addDirection(Direction.DOWN);
+            } else if (e.getKeyCode() == KeyEvent.VK_A && !player.getDirections().contains(Direction.LEFT)) {
+                player.addDirection(Direction.LEFT);
+            } else if (e.getKeyCode() == KeyEvent.VK_D && !player.getDirections().contains(Direction.RIGHT)) {
+                player.addDirection(Direction.RIGHT);
+            }
         }
-        
+
         if (currentMap != null) {
             if (e.getKeyCode() == KeyEvent.VK_0) {
                 mapVisualizer.toggleShowAllObjects();
             }
-        }     
+        }
     }
 
     @Override
     public void keyReleasedHandler(KeyEvent e) {
         if (player != null) {
-            if (e.getKeyCode() == KeyEvent.VK_W && player.getDirections().contains(Direction.UP)) player.removeDirection(Direction.UP);
-            else if (e.getKeyCode() == KeyEvent.VK_S && player.getDirections().contains(Direction.DOWN)) player.removeDirection(Direction.DOWN);
-            else if (e.getKeyCode() == KeyEvent.VK_A && player.getDirections().contains(Direction.LEFT)) player.removeDirection(Direction.LEFT);
-            else if (e.getKeyCode() == KeyEvent.VK_D && player.getDirections().contains(Direction.RIGHT)) player.removeDirection(Direction.RIGHT);
+            if (e.getKeyCode() == KeyEvent.VK_W && player.getDirections().contains(Direction.UP)) {
+                player.removeDirection(Direction.UP);
+            } else if (e.getKeyCode() == KeyEvent.VK_S && player.getDirections().contains(Direction.DOWN)) {
+                player.removeDirection(Direction.DOWN);
+            } else if (e.getKeyCode() == KeyEvent.VK_A && player.getDirections().contains(Direction.LEFT)) {
+                player.removeDirection(Direction.LEFT);
+            } else if (e.getKeyCode() == KeyEvent.VK_D && player.getDirections().contains(Direction.RIGHT)) {
+                player.removeDirection(Direction.RIGHT);
+            }
         }
     }
-    
+
     @Override
     public void environmentMouseClicked(MouseEvent e) {
 //        System.out.println("Mouse event " + e.toString());
@@ -146,38 +158,36 @@ class Environment extends environment.Environment
             Point cell = currentMap.getCellLocation(e.getPoint());
             currentMap.validateLocation(cell);
         }
-    
+
     }
-    
+
     @Override
     public void paintEnvironment(Graphics g) {
-        
-        
-        
+
         ArrayList<Entity> entities = new ArrayList<>();
-        if (player != null) entities.add(player);
-        
+        if (player != null) {
+            entities.add(player);
+        }
+
         entities.sort((Entity e1, Entity e2) -> {
             final int y1 = e1.getPosition().y;
             final int y2 = e2.getPosition().y;
             return y1 < y2 ? -1 : y1 > y2 ? 1 : 0;
         });
-        
-        
+
         // Resizes the default window size to the current size of the JFrame
 //        AffineTransform atWindow;
 //        Graphics2D graphics = (Graphics2D) g;
 //        atWindow = AffineTransform.getScaleInstance((double) LetsTakeAWalk.getWindowSize().width / DEFAULT_WINDOW_WIDTH, (double) LetsTakeAWalk.getWindowSize().height / DEFAULT_WINDOW_HEIGHT);
 //        if (atWindow != null) graphics.setTransform(atWindow);
-        
         int xTranslation = 0;
         int yTranslation = 0;
-        
+
         if (currentMap != null) {
             currentMap.drawMap(g);
-            
+
         }
-        
+
 //        if (player != null) {
 //            xTranslation = player.getPosition().x;
 //            yTranslation = player.getPosition().y - (player.getSize().height / 2);
@@ -188,10 +198,8 @@ class Environment extends environment.Environment
 //            xTranslation = DEFAULT_WINDOW_X - xTranslation;
 //            yTranslation = DEFAULT_WINDOW_Y - yTranslation;
 //        }
-        
         // Translates all background images in reference to the player's current position
 //        graphics.translate(xTranslation, yTranslation);
-        
         // Draws rectangles for debugging
 //        if (environmentGrid != null) {
 //            drawGridBase(graphics);            
@@ -199,13 +207,10 @@ class Environment extends environment.Environment
 //        
 //        graphics.setColor(Color.RED);
 //        graphics.drawOval(-96, -96, 192, 192);
-        
 //        graphics.drawImage(im.getImage(LTAWImageManager.TEST_BACKGROUND), -environmentGrid.getGridSize().width / 2, -environmentGrid.getGridSize().height / 2, environmentGrid.getGridSize().width, environmentGrid.getGridSize().height, null);
-        
 //        entities.stream().forEach((entity) -> {
 //            entity.draw(graphics);
 //        });      
-        
 //        int environmentFactor = 0;
 //        if (environmentTime >= ENVIRONMENT_DAY_LENGTH * 3 / 8) {
 //            if (environmentTime >= ENVIRONMENT_DAY_LENGTH / 2 && environmentTime < ENVIRONMENT_DAY_LENGTH * 7 / 8) environmentFactor = 255;
@@ -215,52 +220,51 @@ class Environment extends environment.Environment
 //                environmentFactor = environmentFactor * 255 * 8 / ENVIRONMENT_DAY_LENGTH;
 //            }
 //        }
-        
 //        graphics.setColor(new Color(255 - environmentFactor, 128 - environmentFactor / 2, environmentFactor / 16, environmentFactor * 13 / 16));
 //        if (environmentFactor > 0) graphics.fillRect(-xTranslation, -yTranslation, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
     }
-    
+
     public void drawGridBase(Graphics2D graphics) {
         graphics.setColor(Color.LIGHT_GRAY);
         graphics.fillRect(environmentGrid.getPosition().x + DEFAULT_WINDOW_X,
-        environmentGrid.getPosition().y + DEFAULT_WINDOW_Y,
-        environmentGrid.getGridSize().width - DEFAULT_WINDOW_WIDTH,
-        environmentGrid.getGridSize().height - DEFAULT_WINDOW_HEIGHT);
-        
+                environmentGrid.getPosition().y + DEFAULT_WINDOW_Y,
+                environmentGrid.getGridSize().width - DEFAULT_WINDOW_WIDTH,
+                environmentGrid.getGridSize().height - DEFAULT_WINDOW_HEIGHT);
+
         graphics.setColor(Color.GRAY);
         for (int i = 0; i < environmentGrid.getColumns(); i++) {
             int x = (int) environmentGrid.getCellSystemCoordinate(i, 0).x;
             graphics.fillRect(x, environmentGrid.getPosition().y, environmentGrid.getCellWidth(), environmentGrid.getCellHeight());
             graphics.fillRect(x, environmentGrid.getPosition().y + environmentGrid.getGridSize().height - environmentGrid.getCellHeight(), environmentGrid.getCellWidth(), environmentGrid.getCellHeight());
         }
-        
+
         for (int i = 0; i < environmentGrid.getRows(); i++) {
             int y = (int) environmentGrid.getCellSystemCoordinate(0, i).y;
             graphics.fillRect(environmentGrid.getPosition().x, y, environmentGrid.getCellWidth(), environmentGrid.getCellHeight());
             graphics.fillRect(environmentGrid.getPosition().x + environmentGrid.getGridSize().width - environmentGrid.getCellWidth(), y, environmentGrid.getCellWidth(), environmentGrid.getCellHeight());
         }
-        
+
         environmentGrid.paintComponent(graphics);
     }
-    
+
     public void fillGrid(Graphics2D graphics, BufferedImage image, int xTranslation, int yTranslation) {
         for (int x = 0; x < environmentGrid.getColumns(); x++) {
-                for (int y = 0; y < environmentGrid.getRows(); y++) {
-                    
-                    Point gridPoint = new Point(environmentGrid.getCellSystemCoordinate(x, y));
-                    if (player != null &&
-                        gridPoint.x + environmentGrid.getCellWidth() >= -xTranslation + 3 &&
-                        gridPoint.x - DEFAULT_WINDOW_WIDTH <= -xTranslation - 3 &&
-                        gridPoint.y + environmentGrid.getCellHeight() >= -yTranslation + 2 &&
-                        gridPoint.y - DEFAULT_WINDOW_HEIGHT <= -yTranslation - 1)
-                      
-                        graphics.drawImage(image,
-                        gridPoint.x, gridPoint.y,
-                        environmentGrid.getCellWidth(),
-                        environmentGrid.getCellHeight(), null);
-                    
+            for (int y = 0; y < environmentGrid.getRows(); y++) {
+
+                Point gridPoint = new Point(environmentGrid.getCellSystemCoordinate(x, y));
+                if (player != null
+                        && gridPoint.x + environmentGrid.getCellWidth() >= -xTranslation + 3
+                        && gridPoint.x - DEFAULT_WINDOW_WIDTH <= -xTranslation - 3
+                        && gridPoint.y + environmentGrid.getCellHeight() >= -yTranslation + 2
+                        && gridPoint.y - DEFAULT_WINDOW_HEIGHT <= -yTranslation - 1) {
+                    graphics.drawImage(image,
+                            gridPoint.x, gridPoint.y,
+                            environmentGrid.getCellWidth(),
+                            environmentGrid.getCellHeight(), null);
                 }
+
             }
+        }
     }
 
     /**
@@ -275,13 +279,13 @@ class Environment extends environment.Environment
      */
     public void setCurrentMap(Map currentMap) {
         this.currentMap = currentMap;
-        
+
         this.currentMap.setMapVisualizer(mapVisualizer);
         this.currentMap.setPosition(new Point(25, 25));
         //hook up the listener method
         this.currentMap.setPortalEventHandler(this);
         this.currentMap.setItemEventHandler(this);
-        this.currentMap.setObstacleEventHandler(this);   
+        this.currentMap.setObstacleEventHandler(this);
         repaint();
     }
 
@@ -309,5 +313,5 @@ class Environment extends environment.Environment
         return false;
     }
 //</editor-fold>
-    
+
 }
