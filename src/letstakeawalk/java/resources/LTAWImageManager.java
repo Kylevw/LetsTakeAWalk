@@ -238,7 +238,7 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
         WOMAN_WALK_LEFT.add(WOMAN_WALK_LEFT_01);
         imageListMap.put(WOMAN_WALK_LEFT_LIST, WOMAN_WALK_LEFT);  
         
-        imageMap.put(WOMAN_WALK_RIGHT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-walking-right-01.jpg"));
+        imageMap.put(WOMAN_WALK_RIGHT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-right-02.jpg"));
         imageMap.put(WOMAN_WALK_RIGHT_01, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-outline-facing-right.jpg"));        
         imageMap.put(WOMAN_WALK_RIGHT_02, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-walking-right-02.jpg"));
         WOMAN_WALK_RIGHT.add(WOMAN_WALK_RIGHT_00);

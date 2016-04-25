@@ -10,7 +10,6 @@ import letstakeawalk.java.main.ActionState;
 import letstakeawalk.java.main.Direction;
 import letstakeawalk.java.resources.LTAWImageManager;
 import letstakeawalk.java.resources.ImageProviderIntf;
-import letstakeawalk.java.main.ScreenLimitProviderIntf;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -43,16 +42,11 @@ public class Player extends Entity {
 //        drawObjectBoundary(true);
     }
     
-    private final ScreenLimitProviderIntf screenLimiter;
-    
     private final ArrayList<Direction> directions;
     private Direction facingDebug;
     private Direction facing;
     private ActionState actionState;
     private ActionState actionStateDebug;
-    
-    private final Point environmentPosition;
-    private final Point displacementPosition;
     
     private static final int ANIMATION_SPEED = 80;
     
@@ -69,16 +63,12 @@ public class Player extends Entity {
      * 
      */
     
-    public Player(Point position, ScreenLimitProviderIntf screenLimiter, ImageProviderIntf ip, AudioPlayerIntf ap) {
+    public Player(Point position, ImageProviderIntf ip, AudioPlayerIntf ap) {
 
         super(ip.getImage(LTAWImageManager.PLAYER_IDLE_DOWN_00), position, new Dimension(PLAYER_WIDTH, PLAYER_HEIGHT), ip, ap, LTAWImageManager.PLAYER_WALK_DOWN_LIST, ANIMATION_SPEED);
         this.directions = new ArrayList<>();
         maxHealth = 6;
         health = maxHealth;
-        this.environmentPosition = new Point(position);
-        this.displacementPosition = new Point(0, 0);
-        this.screenLimiter = screenLimiter;
-        screenLimiter.setMaxY(screenLimiter.getMaxY());
         
         invulTimer = new DurationTimer(1200);
         healthTimer = new DurationTimer(1600);
@@ -95,12 +85,8 @@ public class Player extends Entity {
     @Override
     public void timerTaskHandler() {
         
-        correctDisplacementPosition();
         
 //        System.out.println("Position: [" + getPosition().x + "," + getPosition().y + "]");
-//        System.out.println("Environment Position: [" + environmentPosition.x + "," + environmentPosition.y + "]");
-//        System.out.println("Displacement Position: [" + displacementPosition.x + "," + displacementPosition.y + "]");
-        
         
         if (displayItemImage != null && itemDisplayTimer.isComplete()) displayItemImage = null;
         
@@ -129,7 +115,6 @@ public class Player extends Entity {
         facingDebug = facing;
         
         // Updates the player's position in the world
-        setPosition(environmentPosition.x + displacementPosition.x, environmentPosition.y + displacementPosition.y);
         
         super.timerTaskHandler();
         
@@ -172,38 +157,6 @@ public class Player extends Entity {
                         break;
                 }
             break;
-        }
-    }
-    
-    private void correctDisplacementPosition() {
-        if (environmentPosition.x < screenLimiter.getMinX()) {
-            int xDifference = environmentPosition.x - screenLimiter.getMinX();
-            environmentPosition.x -= xDifference;
-            displacementPosition.x += xDifference;
-        }
-        else if (environmentPosition.x > screenLimiter.getMaxX()) {
-            int xDifference = environmentPosition.x - screenLimiter.getMaxX();
-            environmentPosition.x -= xDifference;
-            displacementPosition.x += xDifference;
-        }
-        else if (displacementPosition.x != 0 && getPosition().x >= screenLimiter.getMinY() && getPosition().x <= screenLimiter.getMaxY()) {
-            environmentPosition.x += displacementPosition.x;
-            displacementPosition.x = 0;
-        }
-        
-        if (environmentPosition.y < screenLimiter.getMinX()) {
-            int yDifference = environmentPosition.y - screenLimiter.getMinY();
-            environmentPosition.y -= yDifference;
-            displacementPosition.y += yDifference;
-        }
-        else if (environmentPosition.y > screenLimiter.getMaxX()) {
-            int yDifference = environmentPosition.y - screenLimiter.getMaxY();
-            environmentPosition.y -= yDifference;
-            displacementPosition.y += yDifference;
-        }
-        else if (displacementPosition.y != 0 && getPosition().y >= screenLimiter.getMinY() && getPosition().y <= screenLimiter.getMaxY()) {
-            environmentPosition.y += displacementPosition.y;
-            displacementPosition.y = 0;
         }
     }
     
@@ -261,14 +214,6 @@ public class Player extends Entity {
         }
     }
     
-    @Override
-    public void move() {
-        
-        environmentPosition.x += getVelocity().x;
-        environmentPosition.y += getVelocity().y;
-        
-    }
-    
     public void damage(int damage) {
         if (invulTimer.isComplete()) {
             health -= damage;
@@ -301,40 +246,8 @@ public class Player extends Entity {
         directions.remove(direction);
     }
     
-    public Point getEnvironmentPosition() {
-        return environmentPosition;
-    }
-    
-    public Point getDisplacementPosition() {
-        return displacementPosition;
-    }
-    
-    public int getScreenMinX() {
-        return screenLimiter.getMinX();
-    }
-    
-    public int getScreenMaxX() {
-        return screenLimiter.getMaxX();
-    }
-    
-    public int getScreenMinY() {
-        return screenLimiter.getMinY();
-    }
-    
     public boolean healthBlip() {
         return health <= 2 && healthTimer.getRemainingDurationMillis() <= 100 || !healthMeterBlinkTimer.isComplete();
-    }
-    
-    public int getScreenMaxY() {
-        return screenLimiter.getMaxY() - (getSize().height / 2);
-    }
-    
-    public void setScreenLimiter(int screenWidth, int screenHeight) {
-        
-        screenLimiter.setMinX(-screenWidth / 2);
-        screenLimiter.setMinY(-screenHeight / 2);
-        screenLimiter.setMaxX(screenWidth / 2);
-        screenLimiter.setMaxY(screenHeight / 2);
     }
     
     public void heal(int health) {
