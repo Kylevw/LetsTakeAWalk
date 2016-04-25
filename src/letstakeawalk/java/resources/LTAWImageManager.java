@@ -7,6 +7,7 @@ package letstakeawalk.java.resources;
 
 import images.ImageManager;
 import images.ResourceTools;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -59,11 +60,6 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
     public static final String PLAYER_WALK_LEFT_LIST = "PLAYER_WALK_LEFT_LIST";
     public static final String PLAYER_WALK_RIGHT_LIST = "PLAYER_WALK_RIGHT_LIST";
     
-    public static final String PLAYER_JUMP_UP_LIST = "PLAYER_JUMP_UP_LIST";
-    public static final String PLAYER_JUMP_DOWN_LIST = "PLAYER_JUMP_DOWN_LIST";
-    public static final String PLAYER_JUMP_LEFT_LIST = "PLAYER_JUMP_LEFT_LIST";
-    public static final String PLAYER_JUMP_RIGHT_LIST = "PLAYER_JUMP_RIGHT_LIST";
-    
     private final ArrayList<String> PLAYER_IDLE_UP;
     private final ArrayList<String> PLAYER_IDLE_DOWN;
     private final ArrayList<String> PLAYER_IDLE_LEFT;
@@ -82,7 +78,7 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
     public static final String WOMAN_IDLE_RIGHT_00 = "WOMAN_IDLE_RIGHT";
     
     private ArrayList<String> WOMAN_IDLE_UP;
-    private ArrayList<String> WOMAN_IDLE_DOWN;
+    private final ArrayList<String> WOMAN_IDLE_DOWN = new ArrayList<>();
     private ArrayList<String> WOMAN_IDLE_LEFT;
     private ArrayList<String> WOMAN_IDLE_RIGHT;
     
@@ -151,10 +147,7 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
         PLAYER_IDLE_LEFT = new ArrayList<>();
         PLAYER_IDLE_RIGHT = new ArrayList<>();
         
-//        PLAYER_JUMP_UP = new ArrayList<>();
-//        PLAYER_JUMP_DOWN = new ArrayList<>();
-//        PLAYER_JUMP_LEFT = new ArrayList<>();
-//        PLAYER_JUMP_RIGHT = new ArrayList<>();
+        WOMAN_IDLE_DOWN.add(WOMAN_IDLE_DOWN_00);
         
         
         PLAYER_IDLE_UP.add(PLAYER_IDLE_UP_00);
@@ -257,14 +250,14 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
         
         
         //Idle images
-//        imageMap.put(WOMAN_IDLE_DOWN_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01.jpg"));   
-//        imageListMap.put(WOMAN_IDLE_DOWN_LIST, WOMAN_IDLE_DOWN);
-//        imageMap.put(WOMAN_IDLE_UP_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-facing-away.jpg"));        
-//        imageListMap.put(WOMAN_IDLE_UP_LIST, WOMAN_IDLE_UP);
-//        imageMap.put(WOMAN_IDLE_LEFT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-outline-facing-left.jpg"));   
-//        imageListMap.put(WOMAN_IDLE_LEFT_LIST, WOMAN_IDLE_LEFT);
-//        imageMap.put(WOMAN_IDLE_RIGHT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-outline-facing-right.jpg"));    
-//        imageListMap.put(WOMAN_WALK_RIGHT_LIST, WOMAN_IDLE_RIGHT);
+        imageMap.put(WOMAN_IDLE_DOWN_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01.jpg"));   
+        imageListMap.put(WOMAN_IDLE_DOWN_LIST, WOMAN_IDLE_DOWN);
+        imageMap.put(WOMAN_IDLE_UP_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-facing-away.jpg"));        
+        imageListMap.put(WOMAN_IDLE_UP_LIST, WOMAN_IDLE_UP);
+        imageMap.put(WOMAN_IDLE_LEFT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-outline-facing-left.jpg"));   
+        imageListMap.put(WOMAN_IDLE_LEFT_LIST, WOMAN_IDLE_LEFT);
+        imageMap.put(WOMAN_IDLE_RIGHT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-outline-facing-right.jpg"));    
+        imageListMap.put(WOMAN_WALK_RIGHT_LIST, WOMAN_IDLE_RIGHT);
     }
     
     @Override
@@ -273,6 +266,43 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf{
         if (image == null) image = (BufferedImage) im.getImage(MISSING_TEXTURE);
         return image;
     }
+    
+    @Override
+    public BufferedImage getTintedImage(BufferedImage image, Color tintColor) {
+        
+        int width = image.getWidth(null);
+        int height = image.getHeight(null);
+        BufferedImage tintedImage = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
+        
+        for (int pixelX = 0; pixelX < image.getWidth(); pixelX++) {
+            for (int pixelY = 0; pixelY < image.getHeight(); pixelY++) {
+                
+                int pixel = image.getRGB(pixelX, pixelY);
+                if((pixel>>24) != 0x00) {        
+                
+                Color color = new Color(image.getRGB(pixelX, pixelY));
+                int red = color.getRed();
+                int green = color.getGreen();
+                int blue = color.getBlue();
+                int redTint = tintColor.getRed();
+                int greenTint = tintColor.getGreen();
+                int blueTint = tintColor.getBlue();
+                
+                int finalRed = red + ((redTint - red) * tintColor.getAlpha() / 255);
+                int finalGreen = green + ((greenTint - green) * tintColor.getAlpha() / 255);
+                int finalBlue = blue + ((blueTint - blue) * tintColor.getAlpha() / 255);
+                
+                Color newColor = new Color(finalRed, finalGreen, finalBlue, color.getAlpha());
+                
+                tintedImage.setRGB(pixelX, pixelY, newColor.getRGB());
+                }
+            }
+        }
+        
+        return tintedImage;
+        
+    }
+    
     
     @Override
     public ArrayList<String> getImageList(String listName){

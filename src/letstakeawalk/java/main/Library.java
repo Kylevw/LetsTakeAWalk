@@ -7,8 +7,8 @@ package letstakeawalk.java.main;
 
 /**
  *
- * @author Kyle van Wiltenburg
+ * @author Kyle
  */
-public enum Direction {
-    UP, RIGHT, DOWN, LEFT
+public class Library {
+    
 }

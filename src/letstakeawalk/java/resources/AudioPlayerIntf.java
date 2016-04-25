@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package letstakeawalk.java.main;
+package letstakeawalk.java.resources;
 
 /**
  *
- * @author Kyle van Wiltenburg
+ * @author Kyle
  */
-public enum Direction {
-    UP, RIGHT, DOWN, LEFT
+public class AudioPlayerIntf {
+    
 }

@@ -5,6 +5,7 @@
  */
 package letstakeawalk.java.resources;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -16,5 +17,6 @@ public interface ImageProviderIntf {
     
     public BufferedImage getImage(String name);
     public ArrayList<String> getImageList(String listName);
+    public BufferedImage getTintedImage(BufferedImage image, Color tintColor);
     
 }

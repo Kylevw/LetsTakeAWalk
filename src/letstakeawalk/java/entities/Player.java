@@ -5,17 +5,20 @@
  */
 package letstakeawalk.java.entities;
 
-import letstakeawalk.java.universal.ActionStateE;
+import java.awt.Dimension;
+import letstakeawalk.java.main.ActionState;
 import letstakeawalk.java.main.Direction;
 import letstakeawalk.java.resources.LTAWImageManager;
 import letstakeawalk.java.resources.ImageProviderIntf;
 import letstakeawalk.java.main.ScreenLimitProviderIntf;
-import images.Animator;
-import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import static letstakeawalk.java.main.EntityManager.bombs;
+import letstakeawalk.java.resources.AudioPlayerIntf;
+import timer.DurationTimer;
 
 /**
  *
@@ -23,10 +26,21 @@ import java.util.ArrayList;
  */
 public class Player extends Entity {
     
+    private static final int PLAYER_WIDTH = 13;
+    private static final int PLAYER_HEIGHT = 30;
+    private int health, maxHealth, bombCount;
+    
+    private final DurationTimer invulTimer;
+    private final DurationTimer healthTimer;
+    private final DurationTimer healthMeterBlinkTimer;
+    private final DurationTimer itemDisplayTimer;
+    
+    private BufferedImage displayItemImage;
+    
     {
-        actionState = ActionStateE.IDLE;
+        actionState = ActionState.IDLE;
         facing = Direction.DOWN;
-//        drawObjectBoundary(false);
+//        drawObjectBoundary(true);
     }
     
     private final ScreenLimitProviderIntf screenLimiter;
@@ -34,14 +48,16 @@ public class Player extends Entity {
     private final ArrayList<Direction> directions;
     private Direction facingDebug;
     private Direction facing;
-    private ActionStateE actionState;
-    private ActionStateE actionStateDebug;
-    private static final int ANIMATION_SPEED = 80;
+    private ActionState actionState;
+    private ActionState actionStateDebug;
     
     private final Point environmentPosition;
     private final Point displacementPosition;
     
-    private final Animator animator;
+    private static final int ANIMATION_SPEED = 80;
+    
+    public static final int BOW_CHARGE_TIME = 30;
+    
     
     /**
      * Constructor, returns an instance of the Player class
@@ -49,29 +65,61 @@ public class Player extends Entity {
      * @param position the current position of the entity on screen
      * @param screenLimiter inputs the minimum and maximum positions for the camera
      * @param ip the LTAWImageManager for the entity
+     * @param ap the AudioManager for the entity
      * 
      */
     
-    public Player(Point position, ScreenLimitProviderIntf screenLimiter, ImageProviderIntf ip) {
+    public Player(Point position, ScreenLimitProviderIntf screenLimiter, ImageProviderIntf ip, AudioPlayerIntf ap) {
 
-        super(ip.getImage(LTAWImageManager.PLAYER_IDLE_DOWN_00), position, new Dimension(28, 64), ip);
+        super(ip.getImage(LTAWImageManager.PLAYER_IDLE_DOWN_00), position, new Dimension(PLAYER_WIDTH, PLAYER_HEIGHT), ip, ap, LTAWImageManager.PLAYER_WALK_DOWN_LIST, ANIMATION_SPEED);
         this.directions = new ArrayList<>();
-        environmentPosition = new Point(position);
+        maxHealth = 6;
+        health = maxHealth;
+        this.environmentPosition = new Point(position);
         this.displacementPosition = new Point(0, 0);
         this.screenLimiter = screenLimiter;
-        screenLimiter.setMaxY(screenLimiter.getMaxY() + (getSize().height / 2));
-        LTAWImageManager im = new LTAWImageManager();
-        this.animator = new Animator(im, getImageProvider().getImageList(LTAWImageManager.PLAYER_WALK_DOWN_LIST), ANIMATION_SPEED);
+        screenLimiter.setMaxY(screenLimiter.getMaxY());
+        
+        invulTimer = new DurationTimer(1200);
+        healthTimer = new DurationTimer(1600);
+        healthMeterBlinkTimer = new DurationTimer(200);
+        itemDisplayTimer = new DurationTimer(600);
+    }
+    
+    @Override
+    public void draw(Graphics2D graphics) {
+        if (displayItemImage != null) graphics.drawImage(displayItemImage, null, getPosition().x - ((displayItemImage.getWidth() + 1) / 2), getPosition().y - PLAYER_WIDTH - displayItemImage.getHeight() - 1);
+        if (invulTimer.getRemainingDurationMillis() / 80 % 2 == 0) super.draw(graphics);
     }
     
     @Override
     public void timerTaskHandler() {
         
-        updateVelocity();
-        move();
+        correctDisplacementPosition();
+        
+//        System.out.println("Position: [" + getPosition().x + "," + getPosition().y + "]");
+//        System.out.println("Environment Position: [" + environmentPosition.x + "," + environmentPosition.y + "]");
+//        System.out.println("Displacement Position: [" + displacementPosition.x + "," + displacementPosition.y + "]");
+        
+        
+        if (displayItemImage != null && itemDisplayTimer.isComplete()) displayItemImage = null;
+        
+        if (health <= 0) {
+            setDespawn(true);
+        }
+        
+        if (healthTimer.isComplete()) healthTimer.start();
+        
+        if (maxHealth % 2 > 0) maxHealth++;
+        if (health > maxHealth) health = maxHealth;
         
         updateActionState();
+        
+        
+        updateVelocity();
         updateFacingDirection();
+
+        move();
         
         if (actionStateDebug != actionState || facingDebug != facing) {
             updateAnimator();
@@ -80,10 +128,83 @@ public class Player extends Entity {
         actionStateDebug = actionState;
         facingDebug = facing;
         
-        updateImage();
-        
         // Updates the player's position in the world
         setPosition(environmentPosition.x + displacementPosition.x, environmentPosition.y + displacementPosition.y);
+        
+        super.timerTaskHandler();
+        
+    }
+    
+    private void updateAnimator() {
+        
+        switch (actionState) {
+            
+            case IDLE:
+                switch (facing) {
+                    case UP: 
+                        setImageList(LTAWImageManager.PLAYER_IDLE_UP_LIST);
+                        break;
+                    case DOWN:
+                        setImageList(LTAWImageManager.WOMAN_IDLE_DOWN_LIST);
+                        break;
+                        case LEFT:
+                        setImageList(LTAWImageManager.PLAYER_IDLE_LEFT_LIST);
+                        break;
+                    case RIGHT:
+                        setImageList(LTAWImageManager.PLAYER_IDLE_RIGHT_LIST);
+                        break;
+                }
+            break;
+                
+            case WALKING:
+                switch (facing) {
+                    case UP: 
+                        setImageList(LTAWImageManager.PLAYER_WALK_UP_LIST);
+                        break;
+                    case DOWN: 
+                        setImageList(LTAWImageManager.PLAYER_WALK_DOWN_LIST);
+                        break;
+                    case LEFT: 
+                        setImageList(LTAWImageManager.PLAYER_WALK_LEFT_LIST);
+                        break;
+                    case RIGHT: 
+                        setImageList(LTAWImageManager.PLAYER_WALK_RIGHT_LIST);
+                        break;
+                }
+            break;
+        }
+    }
+    
+    private void correctDisplacementPosition() {
+        if (environmentPosition.x < screenLimiter.getMinX()) {
+            int xDifference = environmentPosition.x - screenLimiter.getMinX();
+            environmentPosition.x -= xDifference;
+            displacementPosition.x += xDifference;
+        }
+        else if (environmentPosition.x > screenLimiter.getMaxX()) {
+            int xDifference = environmentPosition.x - screenLimiter.getMaxX();
+            environmentPosition.x -= xDifference;
+            displacementPosition.x += xDifference;
+        }
+        else if (displacementPosition.x != 0 && getPosition().x >= screenLimiter.getMinY() && getPosition().x <= screenLimiter.getMaxY()) {
+            environmentPosition.x += displacementPosition.x;
+            displacementPosition.x = 0;
+        }
+        
+        if (environmentPosition.y < screenLimiter.getMinX()) {
+            int yDifference = environmentPosition.y - screenLimiter.getMinY();
+            environmentPosition.y -= yDifference;
+            displacementPosition.y += yDifference;
+        }
+        else if (environmentPosition.y > screenLimiter.getMaxX()) {
+            int yDifference = environmentPosition.y - screenLimiter.getMaxY();
+            environmentPosition.y -= yDifference;
+            displacementPosition.y += yDifference;
+        }
+        else if (displacementPosition.y != 0 && getPosition().y >= screenLimiter.getMinY() && getPosition().y <= screenLimiter.getMaxY()) {
+            environmentPosition.y += displacementPosition.y;
+            displacementPosition.y = 0;
+        }
     }
     
     private void updateVelocity() {
@@ -98,125 +219,77 @@ public class Player extends Entity {
     }
     
     private void updateActionState() {
-        if (!onGround()) actionState = ActionStateE.JUMPING;
-        else if (getVelocity().x != 0 || getVelocity().y != 0) actionState = ActionStateE.WALKING;
-        else actionState = ActionStateE.IDLE;
+        if (getVelocity().x != 0 || getVelocity().y != 0) actionState = ActionState.WALKING;
+        else actionState = ActionState.IDLE;
     }
     
-    private void updateAnimator() {
-        
-        switch (actionState) {
-            
-            case IDLE:
-                switch (facing) {
-                    case UP: 
-                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_IDLE_UP_LIST));
-                        animator.setDelayDurationMillis(Integer.MAX_VALUE);
-                        break;
-                    case DOWN:
-                     animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_IDLE_DOWN_LIST));
-                        animator.setDelayDurationMillis(Integer.MAX_VALUE);
-                        break;
-                        case LEFT:
-                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_IDLE_LEFT_LIST));
-                        animator.setDelayDurationMillis(Integer.MAX_VALUE);
-                        break;
-                    case RIGHT:
-                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_IDLE_RIGHT_LIST));
-                        animator.setDelayDurationMillis(Integer.MAX_VALUE);
-                        break;
-                }
-                break;
-                
-            case WALKING:
-                switch (facing) {
-                    case UP: 
-                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_WALK_UP_LIST));
-                        animator.setDelayDurationMillis(ANIMATION_SPEED);
-                        break;
-                    case DOWN: 
-                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_WALK_DOWN_LIST));
-                        animator.setDelayDurationMillis(ANIMATION_SPEED);
-                        break;
-                    case LEFT: 
-                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_WALK_LEFT_LIST));
-                        animator.setDelayDurationMillis(ANIMATION_SPEED);
-                        break;
-                    case RIGHT: 
-                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_WALK_RIGHT_LIST));
-                        animator.setDelayDurationMillis(ANIMATION_SPEED);
-                        break;
-                }
-                break;
-            
-            case JUMPING:
-                switch (facing) {
-                    case UP: 
-                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_JUMP_UP_LIST));
-                        animator.setDelayDurationMillis(Integer.MAX_VALUE);
-                        break;
-                    case DOWN: 
-                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_JUMP_DOWN_LIST));
-                        animator.setDelayDurationMillis(Integer.MAX_VALUE);
-                        break;
-                    case LEFT: 
-                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_JUMP_LEFT_LIST));
-                        animator.setDelayDurationMillis(Integer.MAX_VALUE);
-                        break;
-                    case RIGHT: 
-                        animator.setImageNames(getImageProvider().getImageList(LTAWImageManager.PLAYER_JUMP_RIGHT_LIST));
-                        animator.setDelayDurationMillis(Integer.MAX_VALUE);
-                        break;
-                }
-                break;
-            
-        }
-        
+    @Override
+    public Rectangle getObjectBoundary() {
+        return new Rectangle(getPosition().x - (getSize().width / 2) + 3,
+        getPosition().y - (getSize().height) + 2,
+        getSize().width - 6, getSize().height - 4);
     }
     
     private void updateFacingDirection() {
-        
-        if (getVelocity().y < 0) facing = Direction.UP;
-        else if (getVelocity().y > 0) facing = Direction.DOWN;
-        else {
-            if (getVelocity().x < 0) facing = Direction.LEFT;
-            else if (getVelocity().x > 0) facing = Direction.RIGHT;
-        }
-        
-    }
-    
-    private void updateImage() {
-        if (animator != null) {
-            BufferedImage image = animator.getCurrentImage();
-            if (image != null) setImage(image);
+        if (directions != null && !directions.isEmpty()) facing = directions.get(directions.size() - 1);
+        switch (facing) {
+            case UP:
+                if (getVelocity().y >= 0) {
+                    if (getVelocity().x < 0) facing = Direction.LEFT;
+                    else if (getVelocity().x > 0) facing = Direction.RIGHT;
+                }
+                break;
+            case DOWN:
+                if (getVelocity().y <= 0) {
+                    if (getVelocity().x < 0) facing = Direction.LEFT;
+                    else if (getVelocity().x > 0) facing = Direction.RIGHT;
+                }
+                break;
+            case LEFT:
+                if (getVelocity().x >= 0) {
+                    if (getVelocity().y < 0) facing = Direction.UP;
+                    else if (getVelocity().y > 0) facing = Direction.DOWN;
+                }
+                break;
+            case RIGHT:
+                if (getVelocity().x <= 0) {
+                    if (getVelocity().y < 0) facing = Direction.UP;
+                    else if (getVelocity().y > 0) facing = Direction.DOWN;
+                }
+                break;
+                
         }
     }
     
     @Override
     public void move() {
         
-        if (getPosition().x + getVelocity().x <= screenLimiter.getMinX() || getPosition().x + getVelocity().x >= screenLimiter.getMaxX()) displacementPosition.x += getVelocity().x;
-        else if (displacementPosition.x == 0) environmentPosition.x += getVelocity().x;
-        else displacementPosition.x = 0;
-        
-        if (getPosition().y + getVelocity().y <= screenLimiter.getMinY() || getPosition().y + getVelocity().y >= screenLimiter.getMaxY()) displacementPosition.y += getVelocity().y;
-        else if (displacementPosition.y == 0) environmentPosition.y += getVelocity().y;
-        else displacementPosition.y = 0;
-        
-        applyZVelocity();
+        environmentPosition.x += getVelocity().x;
+        environmentPosition.y += getVelocity().y;
         
     }
     
-    @Override
-    public Rectangle getObjectBoundary() {
-        return new Rectangle(getPosition().x - (getSize().width / 2) + 3, getPosition().y - getSize().height + 4 - getZDisplacement(), getSize().width - 6, getSize().height - 8);
+    public void damage(int damage) {
+        if (invulTimer.isComplete()) {
+            health -= damage;
+            invulTimer.start();
+        }
+    }
+    
+    public int getHealth() {
+        if (health < maxHealth) return health;
+        else return maxHealth;
+    }
+    
+    public int getMaxHealth() {
+        return maxHealth;
     }
     
     public ArrayList<Direction> getDirections() {
         return directions;
     }
     
-    public ActionStateE getActionState() {
+    public ActionState getActionState() {
         return actionState;
     }
     
@@ -236,10 +309,6 @@ public class Player extends Entity {
         return displacementPosition;
     }
     
-    public void Jump() {
-        if (onGround()) setZVelocity(7);
-    }
-    
     public int getScreenMinX() {
         return screenLimiter.getMinX();
     }
@@ -252,8 +321,44 @@ public class Player extends Entity {
         return screenLimiter.getMinY();
     }
     
+    public boolean healthBlip() {
+        return health <= 2 && healthTimer.getRemainingDurationMillis() <= 100 || !healthMeterBlinkTimer.isComplete();
+    }
+    
     public int getScreenMaxY() {
         return screenLimiter.getMaxY() - (getSize().height / 2);
     }
     
+    public void setScreenLimiter(int screenWidth, int screenHeight) {
+        
+        screenLimiter.setMinX(-screenWidth / 2);
+        screenLimiter.setMinY(-screenHeight / 2);
+        screenLimiter.setMaxX(screenWidth / 2);
+        screenLimiter.setMaxY(screenHeight / 2);
+    }
+    
+    public void heal(int health) {
+        this.health += health;
+        healthMeterBlinkTimer.start();
+    }
+    
+    public void displayItem(BufferedImage displayItemImage) {
+        this.displayItemImage = displayItemImage;
+        itemDisplayTimer.start();
+    }
+    
+    public void addBombs(int bombs) {
+        bombCount += bombs;
+    }
+    
+    public void useBomb() {
+        if (bombCount > 0) {
+            bombs.add(new PrimedBomb(new Point(getPosition().x, getPosition().y), getImageProvider(), getAudioPlayer()));
+            bombCount--;
+        }
+    }
+    
+    public int getBombCount() {
+        return bombCount;
+    }
 }

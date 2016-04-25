@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package letstakeawalk.java.universal;
+package letstakeawalk.java.resources;
 
 /**
  *
  * @author Kyle
  */
-public enum ActionStateE {
-    WALKING, IDLE, JUMPING
+public class AudioManager {
+    
 }

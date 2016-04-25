@@ -8,7 +8,6 @@ package letstakeawalk.java.main;
 import letstakeawalk.java.resources.GameState;
 import letstakeawalk.java.resources.LTAWImageManager;
 import letstakeawalk.java.entities.Player;
-import letstakeawalk.java.entities.Timmy;
 import letstakeawalk.java.entities.Entity;
 import grid.Grid;
 import java.awt.Color;
@@ -20,6 +19,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import letstakeawalk.java.resources.AudioPlayerIntf;
 import path.TrigonometryCalculator;
 
 /**
@@ -29,7 +29,6 @@ import path.TrigonometryCalculator;
 class Environment extends environment.Environment {
     
     public Player player;
-    public Timmy timmy;
     
     private int environmentTime;
     
@@ -47,6 +46,7 @@ class Environment extends environment.Environment {
     public static final int GRID_CELL_SIZE = 24;
     
     LTAWImageManager im;
+    AudioPlayerIntf am;
 
     public Environment() {
         
@@ -58,9 +58,10 @@ class Environment extends environment.Environment {
         environmentGrid = new Grid
         (DEFAULT_WINDOW_WIDTH / GRID_CELL_SIZE, DEFAULT_WINDOW_HEIGHT / GRID_CELL_SIZE * 2, GRID_CELL_SIZE, GRID_CELL_SIZE, new Point(-DEFAULT_WINDOW_X, -DEFAULT_WINDOW_Y), Color.BLACK);
         
+        
         updateGrid(2, 2);
         
-        player = new Player(new Point(0, 0), new PlayerScreenLimitProvider(environmentGrid.getGridSize().width - DEFAULT_WINDOW_WIDTH, environmentGrid.getGridSize().height - DEFAULT_WINDOW_HEIGHT), im);
+        player = new Player(new Point(0, 0), new PlayerScreenLimitProvider(environmentGrid.getGridSize().width - DEFAULT_WINDOW_WIDTH, environmentGrid.getGridSize().height - DEFAULT_WINDOW_HEIGHT), im, am);
         
     }
     
@@ -83,15 +84,9 @@ class Environment extends environment.Environment {
         
         if (player != null) {
             player.timerTaskHandler();
-//            if (timmy != null) System.out.println(player.intersects(timmy));
             int testPoint = (int) TrigonometryCalculator.getHypotenuse(player.getPosition().x, player.getPosition().y);
 //            if (testPoint < 96) System.out.println("Visible");
 //            else System.out.println("Not visible");
-        }
-        
-        if (timmy != null) {
-            timmy.timerTaskHandler();
-            if (timmy.hasDespawned()) timmy = null;
         }
         
         environmentTime++;
@@ -101,43 +96,22 @@ class Environment extends environment.Environment {
     
     @Override
     public void keyPressedHandler(KeyEvent e) {
-        // Uses the Arrow Keys to control the player
         if (player != null) {
-            // Once pressing a key, it adds said key to the Directions list.
-            if (e.getKeyCode() == KeyEvent.VK_UP && !player.getDirections().contains(Direction.UP)) player.addDirection(Direction.UP);
-            else if (e.getKeyCode() == KeyEvent.VK_DOWN && !player.getDirections().contains(Direction.DOWN)) player.addDirection(Direction.DOWN);
-            else if (e.getKeyCode() == KeyEvent.VK_LEFT && !player.getDirections().contains(Direction.LEFT)) player.addDirection(Direction.LEFT);
-            else if (e.getKeyCode() == KeyEvent.VK_RIGHT && !player.getDirections().contains(Direction.RIGHT)) player.addDirection(Direction.RIGHT);
+            if (e.getKeyCode() == KeyEvent.VK_W && !player.getDirections().contains(Direction.UP)) player.addDirection(Direction.UP);
+            else if (e.getKeyCode() == KeyEvent.VK_S && !player.getDirections().contains(Direction.DOWN)) player.addDirection(Direction.DOWN);
+            else if (e.getKeyCode() == KeyEvent.VK_A && !player.getDirections().contains(Direction.LEFT)) player.addDirection(Direction.LEFT);
+            else if (e.getKeyCode() == KeyEvent.VK_D && !player.getDirections().contains(Direction.RIGHT)) player.addDirection(Direction.RIGHT);
+        }
             
-            if (e.getKeyCode() == KeyEvent.VK_SPACE) player.Jump();
-        }
-        
-        if (e.getKeyCode() == KeyEvent.VK_E) {
-            if (timmy != null) {
-                if (player != null) timmy.despawn(player.getPosition());
-                else timmy.despawn();
-            } else if (player != null) timmy = new Timmy(new Point(player.getPosition()), new Point(player.getPosition().x, player.getPosition().y + 40), im);
-            else timmy = new Timmy(new Point(0, 0), im);
-        }
-        
-        if (timmy != null) {
-            if (e.getKeyCode() == KeyEvent.VK_A) timmy.setDestination(new Point(timmy.getPosition().x - 100, timmy.getPosition().y));
-            if (e.getKeyCode() == KeyEvent.VK_D) timmy.setDestination(new Point(timmy.getPosition().x + 100, timmy.getPosition().y));
-            if (e.getKeyCode() == KeyEvent.VK_W) timmy.setDestination(new Point(timmy.getPosition().x, timmy.getPosition().y - 100));
-            if (e.getKeyCode() == KeyEvent.VK_S) timmy.setDestination(new Point(timmy.getPosition().x, timmy.getPosition().y + 100));
-            if (e.getKeyCode() == KeyEvent.VK_Q) timmy.setDestination(new Point(player.getPosition()));
-        }
-        
     }
 
     @Override
     public void keyReleasedHandler(KeyEvent e) {
         if (player != null) {
-            // Once letting go of a key, it removes said key from the Directions list.
-            if (e.getKeyCode() == KeyEvent.VK_UP && player.getDirections().contains(Direction.UP)) player.removeDirection(Direction.UP);
-            else if (e.getKeyCode() == KeyEvent.VK_DOWN && player.getDirections().contains(Direction.DOWN)) player.removeDirection(Direction.DOWN);
-            else if (e.getKeyCode() == KeyEvent.VK_LEFT && player.getDirections().contains(Direction.LEFT)) player.removeDirection(Direction.LEFT);
-            else if (e.getKeyCode() == KeyEvent.VK_RIGHT && player.getDirections().contains(Direction.RIGHT)) player.removeDirection(Direction.RIGHT);
+            if (e.getKeyCode() == KeyEvent.VK_W && player.getDirections().contains(Direction.UP)) player.removeDirection(Direction.UP);
+            else if (e.getKeyCode() == KeyEvent.VK_S && player.getDirections().contains(Direction.DOWN)) player.removeDirection(Direction.DOWN);
+            else if (e.getKeyCode() == KeyEvent.VK_A && player.getDirections().contains(Direction.LEFT)) player.removeDirection(Direction.LEFT);
+            else if (e.getKeyCode() == KeyEvent.VK_D && player.getDirections().contains(Direction.RIGHT)) player.removeDirection(Direction.RIGHT);
         }
     }
     
@@ -149,7 +123,6 @@ class Environment extends environment.Environment {
     public void paintEnvironment(Graphics g) {
         
         ArrayList<Entity> entities = new ArrayList<>();
-        if (timmy != null) entities.add(timmy);
         if (player != null) entities.add(player);
         
         entities.sort((Entity e1, Entity e2) -> {
@@ -170,7 +143,7 @@ class Environment extends environment.Environment {
         
         if (player != null) {
             xTranslation = player.getPosition().x;
-            yTranslation = player.getPosition().y - player.getZDisplacement() - (player.getSize().height / 2);
+            yTranslation = player.getPosition().y - (player.getSize().height / 2);
             if (xTranslation < player.getScreenMinX()) xTranslation = player.getScreenMinX();
             else if (xTranslation > player.getScreenMaxX()) xTranslation = player.getScreenMaxX();
             if (yTranslation < player.getScreenMinY()) yTranslation = player.getScreenMinY();
