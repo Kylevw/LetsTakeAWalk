@@ -141,7 +141,9 @@ class Environment extends environment.Environment
     
     @Override
     public void environmentMouseClicked(MouseEvent e) {
-//        System.out.println("Mouse event " + e.toString());
+        Point ePoint = e.getPoint();
+        ePoint.setLocation(ePoint.x * DEFAULT_WINDOW_WIDTH / LetsTakeAWalk.getWindowSize().width, ePoint.y * DEFAULT_WINDOW_HEIGHT / LetsTakeAWalk.getWindowSize().height);
+        System.out.println("Mouse event " + ePoint.getLocation());
         if (currentMap != null) {
             Point cell = currentMap.getCellLocation(e.getPoint());
             currentMap.validateLocation(cell);
