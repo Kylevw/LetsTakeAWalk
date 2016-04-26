@@ -65,7 +65,7 @@ public class Player extends Entity {
     
     public Player(Point position, ImageProviderIntf ip, AudioPlayerIntf ap) {
 
-        super(ip.getImage(LTAWImageManager.PLAYER_IDLE_DOWN_00), position, new Dimension(PLAYER_WIDTH, PLAYER_HEIGHT), ip, ap, LTAWImageManager.PLAYER_WALK_DOWN_LIST, ANIMATION_SPEED);
+        super(ip.getImage(LTAWImageManager.WOMAN_IDLE_DOWN_00), position, new Dimension(PLAYER_WIDTH, PLAYER_HEIGHT), ip, ap, LTAWImageManager.WOMAN_IDLE_DOWN_LIST, ANIMATION_SPEED);
         this.directions = new ArrayList<>();
         maxHealth = 6;
         health = maxHealth;
@@ -107,6 +107,9 @@ public class Player extends Entity {
 
         move();
         
+        
+        System.out.println(getAnimator().getCurrentImageName());
+        
         if (actionStateDebug != actionState || facingDebug != facing) {
             updateAnimator();
         }
@@ -127,16 +130,16 @@ public class Player extends Entity {
             case IDLE:
                 switch (facing) {
                     case UP: 
-                        setImageList(LTAWImageManager.PLAYER_IDLE_UP_LIST);
+                        setImageList(LTAWImageManager.WOMAN_IDLE_UP_LIST);
                         break;
                     case DOWN:
                         setImageList(LTAWImageManager.WOMAN_IDLE_DOWN_LIST);
                         break;
                         case LEFT:
-                        setImageList(LTAWImageManager.PLAYER_IDLE_LEFT_LIST);
+                        setImageList(LTAWImageManager.WOMAN_IDLE_LEFT_LIST);
                         break;
                     case RIGHT:
-                        setImageList(LTAWImageManager.PLAYER_IDLE_RIGHT_LIST);
+                        setImageList(LTAWImageManager.WOMAN_IDLE_RIGHT_LIST);
                         break;
                 }
             break;
@@ -144,16 +147,16 @@ public class Player extends Entity {
             case WALKING:
                 switch (facing) {
                     case UP: 
-                        setImageList(LTAWImageManager.PLAYER_WALK_UP_LIST);
+                        setImageList(LTAWImageManager.WOMAN_WALK_UP_LIST);
                         break;
                     case DOWN: 
-                        setImageList(LTAWImageManager.PLAYER_WALK_DOWN_LIST);
+                        setImageList(LTAWImageManager.WOMAN_WALK_DOWN_LIST);
                         break;
                     case LEFT: 
-                        setImageList(LTAWImageManager.PLAYER_WALK_LEFT_LIST);
+                        setImageList(LTAWImageManager.WOMAN_WALK_LEFT_LIST);
                         break;
                     case RIGHT: 
-                        setImageList(LTAWImageManager.PLAYER_WALK_RIGHT_LIST);
+                        setImageList(LTAWImageManager.WOMAN_WALK_RIGHT_LIST);
                         break;
                 }
             break;
