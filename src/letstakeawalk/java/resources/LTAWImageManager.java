@@ -104,7 +104,7 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf 
     public static final String WOMAN_WALK_LEFT_01 = "WOMAN_WALK_LEFT_01";
     public static final String WOMAN_WALK_LEFT_02 = "WOMAN_WALK_LEFT_02";
 
-    public static final String WOMAN_WALK_LEFT_LIST = "WOMAN_WALK_DOWN_LIST";
+    public static final String WOMAN_WALK_LEFT_LIST = "WOMAN_WALK_LEFT_LIST";
 
     private final ArrayList<String> WOMAN_WALK_LEFT = new ArrayList<>();
 
@@ -248,9 +248,11 @@ public class LTAWImageManager extends ImageManager implements ImageProviderIntf 
         WOMAN_IDLE_UP.add(WOMAN_IDLE_UP_00);
         imageListMap.put(WOMAN_IDLE_UP_LIST, WOMAN_IDLE_UP);
         imageMap.put(WOMAN_IDLE_LEFT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-outline-facing-left.jpg"));
+        WOMAN_IDLE_LEFT.add(WOMAN_IDLE_LEFT_00);
         imageListMap.put(WOMAN_IDLE_LEFT_LIST, WOMAN_IDLE_LEFT);
         imageMap.put(WOMAN_IDLE_RIGHT_00, ResourceTools.loadImageFromResource("letstakeawalk/resources/images/player/basic-lady-01-outline-facing-right.jpg"));
-        imageListMap.put(WOMAN_WALK_RIGHT_LIST, WOMAN_IDLE_RIGHT);
+        WOMAN_IDLE_RIGHT.add(WOMAN_IDLE_RIGHT_00);
+        imageListMap.put(WOMAN_IDLE_RIGHT_LIST, WOMAN_IDLE_RIGHT);
     }
 
     @Override
