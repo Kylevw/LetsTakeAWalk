@@ -48,7 +48,7 @@ public class Player extends Entity {
     private ActionState actionState;
     private ActionState actionStateDebug;
     
-    private static final int ANIMATION_SPEED = 80;
+    private static final int ANIMATION_SPEED = 200;
     
     public static final int BOW_CHARGE_TIME = 30;
     
@@ -108,7 +108,7 @@ public class Player extends Entity {
         move();
         
         
-        System.out.println(getAnimator().getCurrentImageName());
+//        System.out.println(getAnimator().getCurrentImageName());
         
         if (actionStateDebug != actionState || facingDebug != facing) {
             updateAnimator();
@@ -164,13 +164,13 @@ public class Player extends Entity {
     }
     
     private void updateVelocity() {
-        
+        //Cammy made changes, all twos were origionally threes
         // If the player's Directions list contains a certain direction, apply that direction to the velocity
         setVelocity(0, 0);
-        if (directions.contains(Direction.UP)) accelerate(0, -3);
-        if (directions.contains(Direction.DOWN)) accelerate(0, 3);
-        if (directions.contains(Direction.LEFT)) accelerate(-3, 0);
-        if (directions.contains(Direction.RIGHT)) accelerate(3, 0);
+        if (directions.contains(Direction.UP)) accelerate(0, -2);
+        if (directions.contains(Direction.DOWN)) accelerate(0, 2);
+        if (directions.contains(Direction.LEFT)) accelerate(-2, 0);
+        if (directions.contains(Direction.RIGHT)) accelerate(2, 0);
         
     }
     
