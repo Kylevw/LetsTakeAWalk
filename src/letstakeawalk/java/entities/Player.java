@@ -52,6 +52,8 @@ public class Player extends Entity {
     
     public static final int BOW_CHARGE_TIME = 30;
     
+    private boolean sprinting;
+    
     
     /**
      * Constructor, returns an instance of the Player class
@@ -167,10 +169,10 @@ public class Player extends Entity {
         //Cammy made changes, all twos were origionally threes
         // If the player's Directions list contains a certain direction, apply that direction to the velocity
         setVelocity(0, 0);
-        if (directions.contains(Direction.UP)) accelerate(0, -2);
-        if (directions.contains(Direction.DOWN)) accelerate(0, 2);
-        if (directions.contains(Direction.LEFT)) accelerate(-2, 0);
-        if (directions.contains(Direction.RIGHT)) accelerate(2, 0);
+        if (directions.contains(Direction.UP)) accelerate(0, -1);
+        if (directions.contains(Direction.DOWN)) accelerate(0, 1);
+        if (directions.contains(Direction.LEFT)) accelerate(-1, 0);
+        if (directions.contains(Direction.RIGHT)) accelerate(1, 0);
         
     }
     
@@ -276,5 +278,19 @@ public class Player extends Entity {
     
     public int getBombCount() {
         return bombCount;
+    }
+
+    /**
+     * @return the sprinting
+     */
+    public boolean isSprinting() {
+        return sprinting;
+    }
+
+    /**
+     * @param sprinting the sprinting to set
+     */
+    public void setSprinting(boolean sprinting) {
+        this.sprinting = sprinting;
     }
 }
